@@ -1,0 +1,2 @@
+#!/bin/bash
+curl -X POST https://api.vercel.com/v1/integrations/deploy/prj_cZBcX1oQUvGjKK8C8NcxpIqGZdGn/zTwYOOUojf
