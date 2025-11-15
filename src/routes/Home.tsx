@@ -116,7 +116,7 @@ export default function Home() {
                             </aside>
                         )}
                         <p class="hero-lead">
-                            Zasedba Kranjci prinaša energijo, ki napolni vsak oder in plesišče od intimnih porok ali poslovnih zabav do velikih gala prireditev.<br/>Neverjeten repertoar znanih ter popularnih skladb vseh žanrov v akustični ali plesno / pevski izvedbi.
+                            Zasedba Kranjci prinaša energijo, ki napolni vsak oder in plesišče od intimnih porok ali poslovnih zabav do velikih gala prireditev.<br/>Neverjeten repertoar znanih ter popularnih skladb vseh žanrov v akustični ali "live band" plesno / pevski izvedbi.
                         </p>
                         <div class="hero-cta">
                             <a class="btn" href="/contact">
