@@ -53,6 +53,7 @@ Na Vercelu cron kliče `/api/fetch-gcal` (ki interno zažene `fetch-all`) vsak d
    ```bash
    npx vercel --prod
    ```
+   (Če želiš samo predogled brez produkcije: `npx vercel`.)
 2. V **Project Settings → Environment Variables** nastavi:
    - `SITE_URL = https://www.kranjci.si`
 - za kontaktni obrazec (SMTP):
@@ -67,6 +68,7 @@ Na Vercelu cron kliče `/api/fetch-gcal` (ki interno zažene `fetch-all`) vsak d
     - `META_FACEBOOK_PAGES` (vejicami ločen seznam page ID-jev)
     - `META_INSTAGRAM_USERS` (vejicami ločen seznam IG user ID-jev)
     - `META_NEWS_LIMIT` (opcijsko število objav na profil, privzeto 5)
+3. V korenu obstaja skripta `DEPLOY`; zaženi jo, da iz glavne git veje (main) sprožiš deploy na Vercel.
 
 ## Struktura
 ```
