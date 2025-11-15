@@ -1,0 +1,29 @@
+import { spawn } from "node:child_process";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const ROOT_DIR = path.dirname(fileURLToPath(import.meta.url));
+
+function runScript(script) {
+    return new Promise((resolve, reject) => {
+        const child = spawn("node", [path.join(ROOT_DIR, script)], {
+            stdio: "inherit",
+            env: process.env
+        });
+        child.on("close", (code) => {
+            if (code === 0) resolve();
+            else reject(new Error(`${script} exited with code ${code}`));
+        });
+        child.on("error", reject);
+    });
+}
+
+async function main() {
+    await runScript("fetch-shows.mjs");
+    await runScript("fetch-news.mjs");
+}
+
+main().catch((err) => {
+    console.error(err);
+    process.exitCode = 1;
+});

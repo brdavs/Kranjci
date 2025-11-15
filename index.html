@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="sl">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Zasedba Kranjci</title>
+        <meta name="description" content="Uradna mini stran zasedbe Kranjci – koncerti, glasba, kontakt." />
+        <meta property="og:title" content="Zasedba Kranjci" />
+        <meta property="og:description" content="Koncerti, glasba in kontakt." />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="/media/home/00.webp" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="preload" href="/styles/global.css" as="style" />
+        <link rel="preload" href="/media/poster.webp" as="image" fetchpriority="high" />
+        <link rel="preload" href="/media/bg_720.mp4" as="video" type="video/mp4" />
+        <link rel="preload" href="/media/bg_720.webm" as="video" type="video/webm" />
+        <link rel="stylesheet" href="/styles/global.css" />
+        <link
+            rel="preload"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+            as="style"
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+            media="print"
+            onload="this.media='all'"
+        />
+    </head>
+    <body>
+        <div id="app"></div>
+        <script type="module" src="/src/main.tsx"></script>
+    </body>
+</html>
