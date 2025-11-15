@@ -122,6 +122,15 @@ Telo novice je klasičen **Markdown**.
 - Novice se samodejno zapišejo v `src/data/news.ts` in se ne brišejo ob naslednjih sinhronizacijah.
 - Poleg koledarja lahko novice prihajajo tudi iz Meta Graph API (Facebook/Instagram). Če nastaviš zgornje env spremenljivke, skripta `fetch-news` doda najnovejše objave teh profilov (tekst kot Markdown + link in naslov iz prve vrstice).
 
+
+### Dogodki (Shows)
+- Podatki o nastopih se generirajo v `src/data/shows.ts` preko skripte `npm run fetch-shows` ali `npm run fetch-all`.
+- Vir je Google Calendar (ICS). Upoštevajo se dogodki z oznako `[E]` in v oknu od enega meseca nazaj do dveh mesecev naprej.
+- Polja: `date`, `time`, `city`, `venue`, `more` (Markdown → HTML), `type` (`open`/`closed`), `link?`.
+- Na produkciji Vercel cron pokliče `/api/fetch-gcal` (interno `fetch-all`) ob 6:00 UTC, kar osveži `shows.ts` + `news.ts`.
+- Ročno osveževanje pred deployem: `npm run fetch-shows` ali `npm run fetch-all` (lokalno ali v CI) in nato deploy.
+
+
 ### Člani (Markdown)
 Primer `content/members/luka-kranjc.md`:
 ```md
