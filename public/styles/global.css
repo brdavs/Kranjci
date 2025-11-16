@@ -814,6 +814,19 @@ a:hover {
         padding: 20px;
     }
 
+    .home-section {
+        padding: 60px 0;
+    }
+
+    .section-header {
+        margin-bottom: 24px;
+    }
+
+    .hero-card {
+        padding: 24px;
+        gap: 6px;
+    }
+
     .hero-content {
         align-items: center;
         text-align: center;
@@ -847,15 +860,15 @@ a:hover {
     }
 
     .hero-lead {
-        margin-top: calc(var(--vh) - var(--hero-above));
+        margin-top: calc(var(--vh) - var(--hero-above) * 1.5);
     }
 }
-
+/* 
 @media (max-height: 780px) {
     .hero-lead {
         margin-top: calc(var(--vh) - var(--hero-above));
     }
-}
+} */
 
 img[href]:hover { cursor: pointer; filter: brightness(1.2); }
 
@@ -876,8 +889,8 @@ img[href]:hover { cursor: pointer; filter: brightness(1.2); }
 .embed--list { aspect-ratio: 16 / 16; min-height: 380px; }
 footer { margin-top: 80px; padding: 32px; border-top: 1px solid rgba(255, 255, 255, 0.08); color: var(--muted); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; text-align: center; }
 footer .footer-brand { display: inline-flex; justify-content: center; }
-footer .brand-logo { height: 36px; width: auto; }
-footer .footer-logo { height: 48px; }
+footer .brand-logo { height: 29px; width: auto; }
+footer .footer-logo { height: 38px; }
 .music-embeds { margin-top: 16px; display: flex; flex-direction: column; gap: 12px; }
 .music-embeds iframe { border: 0; border-radius: 12px; width: 100%; aspect-ratio: 16 / 9; }
 
