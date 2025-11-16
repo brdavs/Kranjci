@@ -151,7 +151,7 @@ export default function Home() {
                     </header>
                     <div class="feature-grid">
                         <article class="feature-card">
-                            <h3>Proke in obletnice</h3>
+                            <h3>Poroke in obletnice</h3>
                             <p>Z več kot sedemstopetdeset uspešnimi poročnimi slavji smo Kranjci prava izbira tako za tiho, nevsiljivo glasbeno spremljavo kot za vesel, plesno obarvan večer.</p>
                         </article>
                         <article class="feature-card">
