@@ -1,6 +1,6 @@
 ---
 name: "Nejc Babnik"
-role: "Odrski manager, inženir svetlobe, roady in naš šofer"
+role: "Odrski manager, inženir svetlobe, roadie in naš šofer"
 photo: "/media/people/nejc.webp"
 # socials: [{"type":"instagram","url":"https://instagram.com/nejcbabnik"}]
 ---
