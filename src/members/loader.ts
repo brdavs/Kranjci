@@ -8,7 +8,7 @@ export type MemberMeta = {
 };
 export type Member = MemberMeta & { html: string };
 
-const rawMods = import.meta.glob("/content/members/*.md", { as: "raw", eager: true }) as Record<string, string>;
+const rawMods = import.meta.glob("/content/members/*.md", { query: "?raw", import: "default", eager: true }) as Record<string, string>;
 
 function parseFrontmatter(raw: string): { meta: Record<string, string>; body: string } {
     if (!raw.startsWith("---")) return { meta: {}, body: raw };
