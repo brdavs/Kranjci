@@ -8,7 +8,9 @@ import { uploadJsonBlob } from "./utils/blob-storage.mjs";
 
 loadEnv();
 const ROOT_DIR = path.dirname(fileURLToPath(import.meta.url));
-const OUTPUT_JSON = path.resolve(ROOT_DIR, "../src/data/shows.json");
+const OUTPUT_JSON = process.env.VERCEL
+    ? path.join("/tmp", "shows.json")
+    : path.resolve(ROOT_DIR, "../src/data/shows.json");
 const CALENDAR_URL = process.env.CALENDAR_URL?.trim();
 if (!CALENDAR_URL) throw new Error("Missing CALENDAR_URL env var");
 
@@ -75,6 +77,7 @@ async function main() {
         .map(toShow)
         .filter(Boolean)
         .sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
+    await fs.mkdir(path.dirname(OUTPUT_JSON), { recursive: true });
     await fs.writeFile(OUTPUT_JSON, JSON.stringify(shows, null, 2));
     const blobUrl = await uploadJsonBlob("shows.json", JSON.stringify(shows));
     if (blobUrl) {

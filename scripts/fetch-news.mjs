@@ -11,7 +11,9 @@ import { uploadJsonBlob } from "./utils/blob-storage.mjs";
 loadEnv();
 
 const ROOT_DIR = path.dirname(fileURLToPath(import.meta.url));
-const NEWS_OUTPUT_JSON = path.resolve(ROOT_DIR, "../src/data/news.json");
+const NEWS_OUTPUT_JSON = process.env.VERCEL
+    ? path.join("/tmp", "news.json")
+    : path.resolve(ROOT_DIR, "../src/data/news.json");
 const NEWS_FUTURE_YEARS = 1;
 
 const META_GRAPH_TOKEN = process.env.META_GRAPH_TOKEN?.trim();
@@ -63,6 +65,7 @@ async function main() {
     const newsItems = results.flatMap((result) => (result.status === "fulfilled" ? result.value : []));
     const existingNews = await readExistingNews();
     const mergedNews = mergeNews(existingNews, newsItems);
+    await fs.mkdir(path.dirname(NEWS_OUTPUT_JSON), { recursive: true });
     await fs.writeFile(NEWS_OUTPUT_JSON, JSON.stringify(mergedNews, null, 2));
     const blobUrl = await uploadJsonBlob("news.json", JSON.stringify(mergedNews));
     if (blobUrl) {
