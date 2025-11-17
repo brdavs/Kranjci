@@ -46,7 +46,7 @@ npm run fetch-news
 ```
 `fetch-shows` posodobi `src/data/shows.ts` iz Google Calendar ICS. `fetch-news` združi koledarske novice z Meta (Facebook/Instagram) objavami in posodobi `src/data/news.ts`. Datoteke so generirane – ne urejaj jih ročno.
 
-Na Vercelu cron kliče `/api/fetch-gcal` (ki interno zažene `fetch-all`) vsak dan ob 6:00 UTC – glej `vercel.json`/`api/fetch-gcal.ts`. Če uporabiš drugo infrastrukturo, nastavi lasten cron da pokliče enak endpoint ali zažene skripte lokalno.
+Na Vercelu cron kliče `/api/fetch-all` (ki interno zažene `fetch-all`) vsak dan ob 6:00 UTC – glej `vercel.json`/`api/fetch-all.ts`. Če uporabiš drugo infrastrukturo, nastavi lasten cron da pokliče enak endpoint ali zažene skripte lokalno.
 
 ## Vercel (deploy)
 1. Poveži repozitorij v **Vercel** in izberi framework **Vite** (output: `dist/`), ali lokalno:
@@ -74,7 +74,7 @@ Na Vercelu cron kliče `/api/fetch-gcal` (ki interno zažene `fetch-all`) vsak d
 ```
 .
 ├─ api/contact.ts              # Vercel serverless funkcija (nodemailer)
-├─ api/fetch-gcal.ts         # Cron endpoint za sinhronizacijo koledarja
+├─ api/fetch-all.ts         # Cron endpoint za sinhronizacijo koledarja
 ├─ content/
 │  └─ members/*.md            # Člani (Markdown + frontmatter)
 ├─ public/
@@ -127,7 +127,7 @@ Telo novice je klasičen **Markdown**.
 - Podatki o nastopih se generirajo v `src/data/shows.ts` preko skripte `npm run fetch-shows` ali `npm run fetch-all`.
 - Vir je Google Calendar (ICS). Upoštevajo se dogodki z oznako `[E]` in v oknu od enega meseca nazaj do dveh mesecev naprej.
 - Polja: `date`, `time`, `city`, `venue`, `more` (Markdown → HTML), `type` (`open`/`closed`), `link?`.
-- Na produkciji Vercel cron pokliče `/api/fetch-gcal` (interno `fetch-all`) ob 6:00 UTC, kar osveži `shows.ts` + `news.ts`.
+- Na produkciji Vercel cron pokliče `/api/fetch-all` (interno `fetch-all`) ob 6:00 UTC, kar osveži `shows.ts` + `news.ts`.
 - Ročno osveževanje pred deployem: `npm run fetch-shows` ali `npm run fetch-all` (lokalno ali v CI) in nato deploy.
 
 

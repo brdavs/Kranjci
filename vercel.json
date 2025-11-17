@@ -1,6 +1,6 @@
 {
     "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
     "crons": [
-        { "path": "/api/fetch-gcal", "schedule": "0 6 * * *" }
+        { "path": "/api/fetch-all", "schedule": "0 6 * * *" }
     ]
 }
