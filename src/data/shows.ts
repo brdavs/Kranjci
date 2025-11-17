@@ -16,7 +16,7 @@ const RAW_SHOWS: Show[] = [
         "date": "2025-11-28",
         "city": "Ljubljana",
         "venue": "eVino",
-        "more": "Prednovoletna zasebna zabava. 🎉 🎶",
+        "more": "Zasebna zabava 🎉",
         "time": "20:00",
         "type": "closed"
     },
@@ -24,7 +24,7 @@ const RAW_SHOWS: Show[] = [
         "date": "2025-11-30",
         "city": "Radovljica",
         "venue": "Radovljica",
-        "more": "Koncert ob prižigu lučk v Radovljici.",
+        "more": "Koncert ob prižigu lučk na glavnem trgu v Radovljici.",
         "time": "17:00",
         "type": "open"
     },
@@ -32,8 +32,24 @@ const RAW_SHOWS: Show[] = [
         "date": "2025-12-05",
         "city": "Ljubljana",
         "venue": "Dvorni bar",
-        "more": "Novoletna zabava **Odvetniške pisarne Senica** in koncert zasedbe Kranjci. Z Nami bo pevka Anea Mlinar.",
+        "more": "Zasebna zabava 🎉",
         "time": "21:30",
+        "type": "closed"
+    },
+    {
+        "date": "2025-12-13",
+        "city": "Škofljica",
+        "venue": "Škofljica",
+        "more": "Koncert ob veselem decembru na Škofljici.",
+        "time": "20:00",
+        "type": "open"
+    },
+    {
+        "date": "2025-12-31",
+        "city": "Podčetrtek",
+        "venue": "Terme Olimia",
+        "more": "Silvestrovanje v Hotelu Sotelia v Termah Olimia.",
+        "time": "19:00",
         "type": "closed"
     }
 ];

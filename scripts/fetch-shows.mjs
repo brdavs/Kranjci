@@ -3,8 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { httpGet, formatLocalDate, formatLocalTime, DEFAULT_TIME_ZONE } from "./utils/fetch-utils.mjs";
 import { parseICSEvents, resolveICalDate, parseFrontmatterBlock } from "./utils/ical-utils.mjs";
-
-const CALENDAR_URL = "https://calendar.google.com/calendar/ical/c7dd253fda845dd4bee2f194e7b6b96364b8d67076482b68de877d073cf98da2%40group.calendar.google.com/public/basic.ics";
+import { CALENDAR_URL } from "./utils/calendar-url.mjs";
 const ROOT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const OUTPUT_FILE = path.resolve(ROOT_DIR, "../src/data/shows.ts");
 

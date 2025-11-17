@@ -10,13 +10,6 @@ const ROOT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const NEWS_OUTPUT_FILE = path.resolve(ROOT_DIR, "../src/data/news.ts");
 const NEWS_FUTURE_YEARS = 1;
 
-function withTimeout(promise, label, timeoutMs = 20000) {
-    return Promise.race([
-        promise,
-        new Promise((_, reject) => setTimeout(() => reject(new Error(`${label} timed out after ${timeoutMs}ms`)), timeoutMs))
-    ]);
-}
-
 const META_GRAPH_TOKEN = process.env.META_GRAPH_TOKEN?.trim();
 const META_FACEBOOK_PAGES = splitList(process.env.META_FACEBOOK_PAGES);
 const META_INSTAGRAM_USERS = splitList(process.env.META_INSTAGRAM_USERS);
@@ -81,15 +74,16 @@ export const news: NewsItem[] = RAW_NEWS.map((item) => ({
 async function main() {
     const sources = [];
     console.log("Fetching calendar news...");
-    sources.push(withTimeout(fetchCalendarNews(), "Calendar news"));
-    if (META_GRAPH_TOKEN && META_FACEBOOK_PAGES.length > 0) {
-        console.log(`Fetching Facebook news for: ${META_FACEBOOK_PAGES.join(", ")}`);
-        sources.push(withTimeout(fetchFacebookNews({ token: META_GRAPH_TOKEN, pageIds: META_FACEBOOK_PAGES, limit: META_NEWS_LIMIT, withinWindow }), "Facebook news"));
-    }
-    if (META_GRAPH_TOKEN && META_INSTAGRAM_USERS.length > 0) {
-        console.log(`Fetching Instagram news for: ${META_INSTAGRAM_USERS.join(", ")}`);
-        sources.push(withTimeout(fetchInstagramNews({ token: META_GRAPH_TOKEN, userIds: META_INSTAGRAM_USERS, limit: META_NEWS_LIMIT, withinWindow }), "Instagram news"));
-    }
+    sources.push(fetchCalendarNews());
+    // Temporarily disabled Meta (Facebook/Instagram) news fetching.
+    // if (META_GRAPH_TOKEN && META_FACEBOOK_PAGES.length > 0) {
+    //     console.log(`Fetching Facebook news for: ${META_FACEBOOK_PAGES.join(", ")}`);
+    //     sources.push(fetchFacebookNews({ token: META_GRAPH_TOKEN, pageIds: META_FACEBOOK_PAGES, limit: META_NEWS_LIMIT, withinWindow }));
+    // }
+    // if (META_GRAPH_TOKEN && META_INSTAGRAM_USERS.length > 0) {
+    //     console.log(`Fetching Instagram news for: ${META_INSTAGRAM_USERS.join(", ")}`);
+    //     sources.push(fetchInstagramNews({ token: META_GRAPH_TOKEN, userIds: META_INSTAGRAM_USERS, limit: META_NEWS_LIMIT, withinWindow }));
+    // }
     const results = await Promise.allSettled(sources);
     const newsItems = results.flatMap((result) => (result.status === "fulfilled" ? result.value : []));
     const existingNews = await readExistingNews();

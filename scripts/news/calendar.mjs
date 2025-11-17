@@ -1,7 +1,7 @@
 import { httpGet, formatLocalDate, formatLocalTime, DEFAULT_TIME_ZONE, slugify } from "../utils/fetch-utils.mjs";
 import { parseICSEvents, resolveICalDate, parseFrontmatterBlock } from "../utils/ical-utils.mjs";
+import { CALENDAR_URL } from "../utils/calendar-url.mjs";
 
-const CALENDAR_URL = "https://calendar.google.com/calendar/ical/f23dcce980a7f997ab0b6e7992405acb561ddffb776903d89359e4690140a790%40group.calendar.google.com/private-1565ab922629117c46c860eb118dea29/basic.ics";
 const NEWS_FUTURE_YEARS = 1;
 
 export async function fetchCalendarNews() {

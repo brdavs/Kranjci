@@ -10,19 +10,11 @@ function runScript(script) {
             stdio: "inherit",
             env: process.env
         });
-        const timeout = setTimeout(() => {
-            child.kill("SIGTERM");
-            reject(new Error(`${script} timed out`));
-        }, 30000);
         child.on("close", (code) => {
-            clearTimeout(timeout);
             if (code === 0) resolve();
             else reject(new Error(`${script} exited with code ${code}`));
         });
-        child.on("error", (err) => {
-            clearTimeout(timeout);
-            reject(err);
-        });
+        child.on("error", reject);
     });
 }
 
