@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const DIST = path.resolve(ROOT, "dist");
-const NEWS_DATA_FILE = path.resolve(ROOT, "src", "data", "news.ts");
+const NEWS_DATA_FILE = path.resolve(ROOT, "src", "data", "news.json");
 const MEMBERS_DIR = path.resolve(ROOT, "content", "members");
 
 const SITE_URL = (process.env.SITE_URL || "https://www.kranjci.si").replace(/\/+$/, "");
@@ -17,9 +17,7 @@ function escXml(s) {
 async function loadNewsData() {
     try {
         const content = await fs.readFile(NEWS_DATA_FILE, "utf8");
-        const match = content.match(/const RAW_NEWS:[^{=]+=\s*(\[[\s\S]*?\]);/);
-        if (!match) return [];
-        return JSON.parse(match[1]);
+        return JSON.parse(content);
     } catch {
         return [];
     }

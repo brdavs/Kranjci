@@ -1,0 +1,12 @@
+[
+  {
+    "uid": "6jb8rbd2tojsjt1go1fccro4mk@google.com",
+    "slug": "2025-11-14-pozdravljen-svet",
+    "title": "Pozdravljen svet",
+    "date": "2025-11-14",
+    "time": "17:00",
+    "markdown": "Nova celostna podoba je nastala v celoti \"doma\", prav tako spletna stran.\n\nUporabljamo moderne spletne tehnologije, (Preact, Vercel serverless), pa tudi kakšne res dobre starejše (Markdown).\n\nSpletna stran zaenkrat ne uporablja piškotkov in ne beleži statistike.",
+    "excerpt": "Kranjci lansiramo novo spletno stran z novo celostno podobo",
+    "cover": "https://picsum.photos/seed/a/1920/1080"
+  }
+]

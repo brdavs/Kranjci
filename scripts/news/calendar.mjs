@@ -1,6 +1,10 @@
 import { httpGet, formatLocalDate, formatLocalTime, DEFAULT_TIME_ZONE, slugify } from "../utils/fetch-utils.mjs";
 import { parseICSEvents, resolveICalDate, parseFrontmatterBlock } from "../utils/ical-utils.mjs";
-import { CALENDAR_URL } from "../utils/calendar-url.mjs";
+import { loadEnv } from "../utils/env.mjs";
+
+loadEnv();
+const CALENDAR_URL = process.env.CALENDAR_URL?.trim();
+if (!CALENDAR_URL) throw new Error("Missing CALENDAR_URL env var");
 
 const NEWS_FUTURE_YEARS = 1;
 

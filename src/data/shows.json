@@ -1,0 +1,66 @@
+[
+  {
+    "date": "2025-11-28",
+    "city": "Ljubljana",
+    "venue": "[E] Prednovoletna zabava",
+    "more": "Zasebna zabava 🎉",
+    "time": "20:00",
+    "type": "closed"
+  },
+  {
+    "date": "2025-11-30",
+    "city": "Radovljica",
+    "venue": "Glavni trg",
+    "more": "Koncert ob prižigu lučk na glavnem trgu v Radovljici.",
+    "time": "17:00",
+    "type": "open"
+  },
+  {
+    "date": "2025-12-05",
+    "city": "Ljubljana",
+    "venue": "[E] Prednovoletna zabava",
+    "more": "Zasebna zabava 🎉",
+    "time": "21:30",
+    "type": "closed"
+  },
+  {
+    "date": "2025-12-12",
+    "city": "Ljubljana",
+    "venue": "[E] Prednovoletna zabava",
+    "more": "Zasebna zabava 🎉",
+    "time": "18:00",
+    "type": "closed"
+  },
+  {
+    "date": "2025-12-13",
+    "city": "Škofljica",
+    "venue": "Mestno jedro",
+    "more": "Koncert ob Veselem decembru na Škofljici.",
+    "time": "20:00",
+    "type": "open"
+  },
+  {
+    "date": "2025-12-15",
+    "city": "Bohinjska Bistrica",
+    "venue": "Kamp Danica",
+    "more": "Koncert v Kampu Danica v Bohinju.",
+    "time": "20:00",
+    "type": "open"
+  },
+  {
+    "date": "2025-12-19",
+    "city": "Ljubljana",
+    "venue": "[E] Prednovoletna zabava",
+    "more": "Zasebna zabava 🎉",
+    "time": "20:00",
+    "type": "closed"
+  },
+  {
+    "date": "2025-12-31",
+    "city": "Podčetrtek",
+    "venue": "Terme Olimia",
+    "more": "Silvestrovanje v Hotelu Sotelia v Termah Olimia.",
+    "time": "19:00",
+    "type": "closed"
+  }
+]
