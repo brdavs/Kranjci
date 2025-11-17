@@ -9,7 +9,7 @@ const GROUPS = [
     },
     {
         title: "Pevke",
-        slugs: ["anea-mlinar", "stefica-grasselli", "tanja-srednik", "masa-cilensek"]
+        slugs: ["anea-mlinar", "stefica-grasselli", "tanja-srednik",]
     },
     {
         title: "Tehnična podpora",
