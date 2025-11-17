@@ -10,17 +10,28 @@ function runScript(script) {
             stdio: "inherit",
             env: process.env
         });
+        const timeout = setTimeout(() => {
+            child.kill("SIGTERM");
+            reject(new Error(`${script} timed out`));
+        }, 30000);
         child.on("close", (code) => {
+            clearTimeout(timeout);
             if (code === 0) resolve();
             else reject(new Error(`${script} exited with code ${code}`));
         });
-        child.on("error", reject);
+        child.on("error", (err) => {
+            clearTimeout(timeout);
+            reject(err);
+        });
     });
 }
 
 async function main() {
+    console.log("Starting fetch-shows...");
     await runScript("fetch-shows.mjs");
+    console.log("fetch-shows done. Starting fetch-news...");
     await runScript("fetch-news.mjs");
+    console.log("fetch-news done.");
 }
 
 main().catch((err) => {

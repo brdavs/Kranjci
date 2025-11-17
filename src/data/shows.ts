@@ -16,7 +16,7 @@ const RAW_SHOWS: Show[] = [
         "date": "2025-11-28",
         "city": "Ljubljana",
         "venue": "eVino",
-        "more": "Prednovoletna zabava **Happy Gym**. Z Nami bo pevka Tanja Srednik.",
+        "more": "Prednovoletna zasebna zabava. 🎉 🎶",
         "time": "20:00",
         "type": "closed"
     },
@@ -24,7 +24,7 @@ const RAW_SHOWS: Show[] = [
         "date": "2025-11-30",
         "city": "Radovljica",
         "venue": "Radovljica",
-        "more": "Koncert ob prižigu lučk. Z Nami bo pevka Anea Mlinar.",
+        "more": "Koncert ob prižigu lučk v Radovljici.",
         "time": "17:00",
         "type": "open"
     },
@@ -35,22 +35,6 @@ const RAW_SHOWS: Show[] = [
         "more": "Novoletna zabava **Odvetniške pisarne Senica** in koncert zasedbe Kranjci. Z Nami bo pevka Anea Mlinar.",
         "time": "21:30",
         "type": "closed"
-    },
-    {
-        "date": "2025-12-12",
-        "city": "Ljubljana",
-        "venue": "Hotel Mons",
-        "more": "Novoletna zabava podjetja **Novartis**. Z Nami bo pevka Anea Mlinar.",
-        "time": "18:00",
-        "type": "closed"
-    },
-    {
-        "date": "2025-12-13",
-        "city": "Ljubljana - Škofljica",
-        "venue": "Občina Škofljica",
-        "more": "Novoletna zabava in koncert zasedbe Kranjci. Z Nami bo pevka Anea Mlinar.",
-        "time": "20:00",
-        "type": "open"
     }
 ];
 

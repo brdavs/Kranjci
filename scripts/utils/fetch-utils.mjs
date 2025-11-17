@@ -25,24 +25,40 @@ export function splitList(value) {
         : [];
 }
 
-export function httpGet(url) {
+export function httpGet(url, { timeoutMs = 15000 } = {}) {
     return new Promise((resolve, reject) => {
-        https
-            .get(url, (res) => {
-                if (res.statusCode && res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-                    httpGet(res.headers.location).then(resolve).catch(reject);
-                    return;
-                }
-                if (res.statusCode !== 200) {
-                    reject(new Error(`Request failed for ${url}: ${res.statusCode} ${res.statusMessage}`));
-                    return;
-                }
-                let data = "";
-                res.setEncoding("utf8");
-                res.on("data", (chunk) => (data += chunk));
-                res.on("end", () => resolve(data));
-            })
-            .on("error", reject);
+        const request = https.get(url, (res) => {
+            if (res.statusCode && res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+                clearTimeout(timer);
+                httpGet(res.headers.location, { timeoutMs }).then(resolve).catch(reject);
+                return;
+            }
+            if (res.statusCode !== 200) {
+                clearTimeout(timer);
+                reject(new Error(`Request failed for ${url}: ${res.statusCode} ${res.statusMessage}`));
+                return;
+            }
+            let data = "";
+            res.setEncoding("utf8");
+            res.on("data", (chunk) => (data += chunk));
+            res.on("end", () => {
+                clearTimeout(timer);
+                resolve(data);
+            });
+            res.on("error", (err) => {
+                clearTimeout(timer);
+                reject(err);
+            });
+        });
+
+        const timer = setTimeout(() => {
+            request.destroy(new Error(`Request timed out after ${timeoutMs}ms for ${url}`));
+        }, timeoutMs);
+
+        request.on("error", (err) => {
+            clearTimeout(timer);
+            reject(err);
+        });
     });
 }
 
