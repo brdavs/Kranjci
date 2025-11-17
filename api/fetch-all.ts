@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
+import "@vercel/blob"; // ensure blob SDK is bundled for spawned scripts
 import { spawn } from "node:child_process";
 import path from "node:path";
 

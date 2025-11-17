@@ -5,10 +5,7 @@
     ],
     "functions": {
         "api/fetch-all.ts": {
-            "includeFiles": [
-                "scripts/**",
-                "node_modules/@vercel/blob/**"
-            ]
+            "includeFiles": "scripts/**"
         }
     }
 }
