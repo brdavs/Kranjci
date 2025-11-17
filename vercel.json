@@ -2,5 +2,10 @@
     "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
     "crons": [
         { "path": "/api/fetch-all", "schedule": "0 6 * * *" }
-    ]
+    ],
+    "functions": {
+        "api/fetch-all.ts": {
+            "includeFiles": "scripts/**"
+        }
+    }
 }
