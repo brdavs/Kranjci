@@ -4,13 +4,10 @@ import { fileURLToPath } from "node:url";
 import { httpGet, formatLocalDate, formatLocalTime, DEFAULT_TIME_ZONE } from "./utils/fetch-utils.mjs";
 import { parseICSEvents, resolveICalDate, parseFrontmatterBlock } from "./utils/ical-utils.mjs";
 import { loadEnv } from "./utils/env.mjs";
-import { uploadJsonBlob } from "./utils/blob-storage.mjs";
+import { writeJsonAndUpload } from "./utils/output.mjs";
 
 loadEnv();
 const ROOT_DIR = path.dirname(fileURLToPath(import.meta.url));
-const OUTPUT_JSON = process.env.VERCEL
-    ? path.join("/tmp", "shows.json")
-    : path.resolve(ROOT_DIR, "../src/data/shows.json");
 const CALENDAR_URL = process.env.CALENDAR_URL?.trim();
 if (!CALENDAR_URL) throw new Error("Missing CALENDAR_URL env var");
 
@@ -77,13 +74,9 @@ async function main() {
         .map(toShow)
         .filter(Boolean)
         .sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
-    await fs.mkdir(path.dirname(OUTPUT_JSON), { recursive: true });
-    await fs.writeFile(OUTPUT_JSON, JSON.stringify(shows, null, 2));
-    const blobUrl = await uploadJsonBlob("shows.json", JSON.stringify(shows));
-    if (blobUrl) {
-        console.log(`Uploaded shows to blob: ${blobUrl}`);
-    }
-    console.log(`Updated ${OUTPUT_JSON} with ${shows.length} events.`);
+    const { outputPath, blobUrl } = await writeJsonAndUpload("shows.json", shows);
+    if (blobUrl) console.log(`Uploaded shows to blob: ${blobUrl}`);
+    console.log(`Updated ${outputPath} with ${shows.length} events.`);
 }
 
 main().catch((err) => {
