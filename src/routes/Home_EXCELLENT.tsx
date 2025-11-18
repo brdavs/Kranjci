@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import { Link } from "wouter-preact";
 import { shows, type Show } from "../data/shows";
 import { getAllPosts } from "../news/loader";
@@ -55,13 +55,13 @@ export default function Home() {
         path: "/"
     });
 
-    const upcoming = useMemo(getUpcomingShows, []);
-    const sortedShows = useMemo(() => [...shows].sort((a, b) => a.date.localeCompare(b.date)), []);
+    const upcoming = getUpcomingShows();
+    const sortedShows = [...shows].sort((a, b) => a.date.localeCompare(b.date));
     const fallbackShow = sortedShows.length > 0 ? sortedShows[sortedShows.length - 1] : undefined;
     const highlight = upcoming[0] ?? fallbackShow;
     const highlightAnchor = highlight ? `show-${highlight.date}` : undefined;
     const highlightLinkTarget = highlight?.link ?? (highlightAnchor ? `/shows#${highlightAnchor}` : "/shows");
-    const posts = useMemo(() => getAllPosts().slice(0, 2), []);
+    const posts = getAllPosts().slice(0, 2);
 
     useEffect(() => {
         if (typeof window === "undefined") return;
@@ -84,19 +84,14 @@ export default function Home() {
                 <div class="hero-media">
                     <div class="hero-slideshow">
                         {slideshowImages.map((src, index) => (
-                            <picture key={src}>
-                                <source media="(max-width: 640px)" type="image/avif" srcSet={src.replace(/\.avif$/, "_s.avif")} />
-                                <source media="(max-width: 640px)" type="image/jpeg" srcSet={src.replace(/\.avif$/, "_s.jpg")} />
-                                <source type="image/avif" srcSet={src} />
-                                <source type="image/jpeg" srcSet={src.replace(/\.avif$/, ".jpg")} />
-                                <img
-                                    src={src.replace(/\.avif$/, ".jpg")}
-                                    className={`hero-slideshow__image${index === currentSlide ? " is-active" : ""}`}
-                                    alt=""
-                                    aria-hidden="true"
-                                    loading={index === 0 ? "eager" : "lazy"}
-                                />
-                            </picture>
+                            <img
+                                key={src}
+                                src={src}
+                                className={`hero-slideshow__image${index === currentSlide ? " is-active" : ""}`}
+                                alt=""
+                                aria-hidden="true"
+                                loading={index === 0 ? "eager" : "lazy"}
+                            />
                         ))}
                     </div>
                 </div>
