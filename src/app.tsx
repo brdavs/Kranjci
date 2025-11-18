@@ -75,63 +75,67 @@ export function App() {
 
     return (
         <>
-            <nav class={`nav${scrolled ? " nav--compact" : ""}${useBurger ? " nav--burger" : ""}${menuOpen ? " nav--open" : ""}`}>
-                <div class="brand">
-                    <Link href="/" onClick={closeMenu} aria-label="Zasedba Kranjci" class="brand-link"><span> </span>
-                        <img src="/logos/logo_white.svg" alt="Zasedba Kranjci" class="brand-logo" />
-                    </Link>
-                </div>
-                <button
-                    type="button"
-                    class="nav-toggle"
-                    aria-expanded={menuOpen}
-                    aria-label="Menu"
-                    onClick={toggleMenu}
-                >
-                    <span />
-                </button>
-                <div class={`nav-links${useBurger ? " nav-links--drawer" : ""}${menuOpen ? " is-open" : ""}`}>
-                    <div class="nav-social">
-                        {SOCIAL_LINKS.map((social) => (
-                            <a key={social.href} href={social.href} target="_blank" rel="noreferrer" aria-label={social.label}>
-                                <i class={social.icon} aria-hidden="true" />
-                            </a>
+            <header role="banner">
+                <nav class={`nav${scrolled ? " nav--compact" : ""}${useBurger ? " nav--burger" : ""}${menuOpen ? " nav--open" : ""}`}>
+                    <div class="brand">
+                        <Link href="/" onClick={closeMenu} aria-label="Zasedba Kranjci" class="brand-link"><span> </span>
+                            <img src="/logos/logo_white.svg" alt="Zasedba Kranjci" class="brand-logo" />
+                        </Link>
+                    </div>
+                    <button
+                        type="button"
+                        class="nav-toggle"
+                        aria-expanded={menuOpen}
+                        aria-label="Menu"
+                        onClick={toggleMenu}
+                    >
+                        <span />
+                    </button>
+                    <div class={`nav-links${useBurger ? " nav-links--drawer" : ""}${menuOpen ? " is-open" : ""}`}>
+                        <div class="nav-social">
+                            {SOCIAL_LINKS.map((social) => (
+                                <a key={social.href} href={social.href} target="_blank" rel="noreferrer" aria-label={social.label}>
+                                    <i class={social.icon} aria-hidden="true" />
+                                </a>
+                            ))}
+                        </div>
+                        {NAV_LINKS.map((item) => (
+                            item.external ? (
+                                <a
+                                    key={item.href}
+                                    href={item.href}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    onClick={closeMenu}
+                                >
+                                    {item.label}
+                                </a>
+                            ) : (
+                                <Link key={item.href} href={item.href} onClick={closeMenu}>{item.label}</Link>
+                            )
                         ))}
                     </div>
-                    {NAV_LINKS.map((item) => (
-                        item.external ? (
-                            <a
-                                key={item.href}
-                                href={item.href}
-                                target="_blank"
-                                rel="noreferrer"
-                                onClick={closeMenu}
-                            >
-                                {item.label}
-                            </a>
-                        ) : (
-                            <Link key={item.href} href={item.href} onClick={closeMenu}>{item.label}</Link>
-                        )
-                    ))}
-                </div>
-            </nav>
-            {useBurger && menuOpen && <div class="nav-overlay" onClick={closeMenu} />}
+                </nav>
+                {useBurger && menuOpen && <div class="nav-overlay" onClick={closeMenu} />}
+            </header>
 
-            <Switch>
-                <Route path="/" component={Home} />
-                <Route path="/shows" component={Shows} />
-                <Route path="/music" component={Music} />
-                <Route path="/contact" component={Contact} />
-                <Route path="/news" component={News} />
-                <Route path="/news/:slug" component={NewsPost} />
-                <Route path="/history" component={History} />
-                <Route path="/clients" component={Clients} />
-                <Route path="/members" component={Members} />
-                <Route path="/member/:slug" component={Member} />
-                <Route component={NotFound} />
-            </Switch>
+            <main id="main-content" role="main">
+                <Switch>
+                    <Route path="/" component={Home} />
+                    <Route path="/shows" component={Shows} />
+                    <Route path="/music" component={Music} />
+                    <Route path="/contact" component={Contact} />
+                    <Route path="/news" component={News} />
+                    <Route path="/news/:slug" component={NewsPost} />
+                    <Route path="/history" component={History} />
+                    <Route path="/clients" component={Clients} />
+                    <Route path="/members" component={Members} />
+                    <Route path="/member/:slug" component={Member} />
+                    <Route component={NotFound} />
+                </Switch>
+            </main>
 
-            <footer>
+            <footer role="contentinfo">
                 <Link href="/" aria-label="Zasedba Kranjci" class="footer-brand">
                     <img src="/logos/logo_white.svg" alt="Zasedba Kranjci" class="brand-logo footer-logo" />
                 </Link>
