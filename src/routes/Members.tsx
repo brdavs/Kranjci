@@ -1,5 +1,6 @@
 import { Link } from "wouter-preact";
 import { getAllMembers } from "../members/loader";
+import { getMemberImageSources } from "../members/images";
 import { useMetaTags } from "../hooks/useMetaTags";
 
 const GROUPS = [
@@ -18,15 +19,20 @@ const GROUPS = [
 ];
 
 function MemberCard({ slug, name, role, photo }: { slug: string; name: string; role: string; photo?: string }) {
+    const sources = photo ? getMemberImageSources(photo) : undefined;
     return (
         <article class="card member-card" key={slug}>
-            {photo && (
+            {sources && (
                 <Link href={`/member/${slug}`} style="display:block;margin-bottom:10px;">
-                    <img
-                        src={photo}
-                        alt={name}
-                        style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px;"
-                    />
+                    <picture>
+                        <source type="image/avif" srcSet={sources.avif} />
+                        <source type="image/jpeg" srcSet={sources.jpeg} />
+                        <img
+                            src={sources.jpeg}
+                            alt={name}
+                            style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px;"
+                        />
+                    </picture>
                 </Link>
             )}
             <h3 style="margin:0 0 6px;">
