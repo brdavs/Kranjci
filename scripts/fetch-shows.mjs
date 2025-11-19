@@ -12,7 +12,7 @@ const CALENDAR_URL = process.env.CALENDAR_URL?.trim();
 if (!CALENDAR_URL) throw new Error("Missing CALENDAR_URL env var");
 
 const WINDOW_START_MONTHS = -1;
-const WINDOW_END_MONTHS = 2;
+const WINDOW_END_MONTHS = 3;
 
 async function fetchICS(url) {
     return httpGet(url);
@@ -47,12 +47,12 @@ function toShow(event) {
     const { meta, content } = parseFrontmatterBlock(event.DESCRIPTION || "");
     const city = meta.city?.trim() || splitCity(event.LOCATION) || "TBD";
     const venue = meta.venue?.trim() || (event.SUMMARY || "TBD").trim();
+    const url = meta.url?.trim() || event.url?.trim() || event.URL?.trim();
     let moreRaw = content.replace(/^\n+/, "").replace(/\n+$/, "");
     if (/^-+\s*(\r?\n|$)/.test(moreRaw)) {
         moreRaw = moreRaw.replace(/^-+\s*/, "");
     }
     const more = moreRaw.length > 0 ? moreRaw : "Več informacij sledi.";
-    const link = event.URL?.trim();
     const typeMeta = meta.type?.trim().toLowerCase();
     const type = (typeMeta === "open" || typeMeta === "closed") ? typeMeta : "open";
 
@@ -63,7 +63,7 @@ function toShow(event) {
         more,
         time: formatLocalTime(when),
         type,
-        ...(link ? { link } : {})
+        ...(url ? { url } : {})
     };
 }
 

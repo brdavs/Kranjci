@@ -35,7 +35,7 @@ export default function Home() {
     const fallbackShow = sortedShows.length > 0 ? sortedShows[sortedShows.length - 1] : undefined;
     const highlight = upcoming[0] ?? fallbackShow;
     const highlightAnchor = highlight ? `show-${highlight.date}` : undefined;
-    const highlightLinkTarget = highlight?.link ?? (highlightAnchor ? `/shows#${highlightAnchor}` : "/shows");
+    const highlightLinkTarget = highlight?.url ?? (highlightAnchor ? `/shows#${highlightAnchor}` : "/shows");
     const posts = getAllPosts().slice(0, 2);
 
     useEffect(() => {
@@ -113,8 +113,8 @@ export default function Home() {
                                 <p class="hero-card__date">{formatDisplayDate(highlight.date)} ob {highlight.time}</p>
                                 <p class="hero-card__meta" dangerouslySetInnerHTML={{ __html: highlight.more }} />
                                 <div class="hero-card__actions">
-                                    {highlight.link ? (
-                                        <a class="btn" href={highlight.link} target="_blank" rel="noreferrer">Več o dogodku</a>
+                                    {highlight.url ? (
+                                        <a class="btn" href={highlight.url} target="_blank" rel="noreferrer">Več o dogodku</a>
                                     ) : (
                                         <Link class="btn btn-secondary" href={highlightLinkTarget}>Vsi dogodki</Link>
                                     )}
@@ -207,8 +207,8 @@ export default function Home() {
                                 <h3>{show.city}</h3>
                                 <p class="upcoming-venue">{show.venue}</p>
                                 <div class="upcoming-actions">
-                                    {show.link ? (
-                                        <a class="btn" href={show.link} target="_blank" rel="noreferrer">Vstopnice</a>
+                                    {show.url ? (
+                                        <a class="btn" href={show.url} target="_blank" rel="noreferrer">Več...</a>
                                     ) : (
                                         <Link class="btn btn-secondary" href="/contact">Povpraševanje</Link>
                                     )}

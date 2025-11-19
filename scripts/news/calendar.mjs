@@ -6,8 +6,6 @@ loadEnv();
 const CALENDAR_URL = process.env.CALENDAR_URL?.trim();
 if (!CALENDAR_URL) throw new Error("Missing CALENDAR_URL env var");
 
-const NEWS_FUTURE_YEARS = 1;
-
 export async function fetchCalendarNews() {
     const ics = await httpGet(CALENDAR_URL);
     const events = parseICSEvents(ics);
@@ -15,12 +13,9 @@ export async function fetchCalendarNews() {
 }
 
 function withinNewsWindow(date) {
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
-    const end = new Date(now);
-    end.setFullYear(end.getFullYear() + NEWS_FUTURE_YEARS);
-    end.setHours(23, 59, 59, 999);
-    return date >= now && date <= end;
+    const todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59, 999);
+    return date <= todayEnd;
 }
 
 function toNews(event) {

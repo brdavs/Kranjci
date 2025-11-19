@@ -119,14 +119,15 @@ Telo novice je klasičen **Markdown**.
 - Naslov v koledarju (`SUMMARY`) mora začeti z `[N]`, a se nikoli ne izpiše na strani.
 - Frontmatter `title` je obvezen in je edini vir naslova novice.
 - `excerpt` (če ga vpišeš) je edini prikazani izvleček; `cover` in `slug` so opcijski (slug se sicer generira iz datuma + naslova).
-- Novice se samodejno zapišejo v `src/data/news.ts` in se ne brišejo ob naslednjih sinhronizacijah.
+- Novice se samodejno zapišejo v `src/data/news.ts`, sinhronizacija pa vsakič ponovno zajame vse koledarske vnose do (vključno) današnjega datuma.
 - Poleg koledarja lahko novice prihajajo tudi iz Meta Graph API (Facebook/Instagram). Če nastaviš zgornje env spremenljivke, skripta `fetch-news` doda najnovejše objave teh profilov (tekst kot Markdown + link in naslov iz prve vrstice).
 
 
 ### Dogodki (Shows)
 - Podatki o nastopih se generirajo v `src/data/shows.ts` preko skripte `npm run fetch-shows` ali `npm run fetch-all`.
-- Vir je Google Calendar (ICS). Upoštevajo se dogodki z oznako `[E]` in v oknu od enega meseca nazaj do dveh mesecev naprej.
-- Polja: `date`, `time`, `city`, `venue`, `more` (Markdown → HTML), `type` (`open`/`closed`), `link?`.
+- Vir je Google Calendar (ICS). Upoštevajo se dogodki z oznako `[E]` in v oknu od enega meseca nazaj do treh mesecev naprej.
+- Polja: `date`, `time`, `city`, `venue`, `more` (Markdown → HTML), `type` (`open`/`closed`), `url?`.
+- V Markdown frontmatterju dogodka lahko nastaviš `city`, `venue`, `type` in `url` (če `url` ni nastavljen, se uporabi `URL` iz ICS).
 - Na produkciji Vercel cron pokliče `/api/fetch-all` (interno `fetch-all`) ob 6:00 UTC, kar osveži `shows.ts` + `news.ts`.
 - Ročno osveževanje pred deployem: `npm run fetch-shows` ali `npm run fetch-all` (lokalno ali v CI) in nato deploy.
 

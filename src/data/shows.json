@@ -28,7 +28,7 @@
     "city": "Ljubljana",
     "venue": "[E] Prednovoletna zabava",
     "more": "Zasebna zabava 🎉",
-    "time": "18:00",
+    "time": "19:00",
     "type": "closed"
   },
   {
@@ -59,8 +59,9 @@
     "date": "2025-12-31",
     "city": "Podčetrtek",
     "venue": "Terme Olimia",
-    "more": "Silvestrovanje v Hotelu Sotelia v Termah Olimia.",
+    "more": "Silvestrovanje z zasedbo Kranjci v Hotelu Sotelia v Termah Olimia.",
     "time": "19:00",
-    "type": "closed"
+    "type": "closed",
+    "url": "https://www.terme-olimia.com/sl/ponudba/silvestrovo-wellness-razvajanje"
   }
 ]

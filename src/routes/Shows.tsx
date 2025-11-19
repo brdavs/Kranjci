@@ -46,8 +46,8 @@ export default function Shows() {
                                     <p class="show-more" dangerouslySetInnerHTML={{ __html: s.more }} />
                                 </div>
                             <div class="show-actions">
-                                {s.link ? (
-                                    <a class="btn" href={s.link} target="_blank" rel="noreferrer">Več o dogodku</a>
+                                {s.url ? (
+                                    <a class="btn" href={s.url} target="_blank" rel="noreferrer">Več...</a>
                                 ) : null}
                             </div>
                         </div>
@@ -65,8 +65,8 @@ export default function Shows() {
                                     <p class="show-more" dangerouslySetInnerHTML={{ __html: s.more }} />
                                 </div>
                                 <div class="show-actions">
-                                    {s.link ? (
-                                        <a class="btn btn-secondary" href={s.link} target="_blank" rel="noreferrer">Več o dogodku</a>
+                                    {s.url ? (
+                                        <a class="btn btn-secondary" href={s.url} target="_blank" rel="noreferrer">Več...</a>
                                     ) : null}
                                 </div>
                             </div>

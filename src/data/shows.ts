@@ -8,7 +8,7 @@ export type Show = {
     more: string;
     time: string;
     type: "open" | "closed";
-    link?: string;
+    url?: string;
 };
 
 const RAW_SHOWS = rawShows as Show[];
