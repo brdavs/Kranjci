@@ -57,7 +57,9 @@ function toShow(event) {
     const when = resolveICalDate(event, DEFAULT_TIME_ZONE);
     if (!when || !withinWindow(when)) return null;
     const { meta, content } = parseFrontmatterBlock(event.DESCRIPTION || "");
-    const city = stripEventPrefix(meta.city?.trim() || splitCity(event.LOCATION) || "TBD");
+    const city = stripEventPrefix(
+        meta.city?.trim() || splitCity(event.LOCATION) || stripEventPrefix(event.SUMMARY) || "TBD"
+    );
     const venue = stripEventPrefix(meta.venue?.trim() || event.SUMMARY || "TBD");
     const url = meta.url?.trim() || event.url?.trim() || event.URL?.trim();
     let moreRaw = content.replace(/^\n+/, "").replace(/\n+$/, "");
