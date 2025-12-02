@@ -2,7 +2,7 @@
   {
     "date": "2025-11-28",
     "city": "Ljubljana",
-    "venue": "[E] Prednovoletna zabava",
+    "venue": "Prednovoletna zabava",
     "more": "Zasebna zabava 🎉",
     "time": "20:00",
     "type": "closed"
@@ -18,7 +18,7 @@
   {
     "date": "2025-12-05",
     "city": "Ljubljana",
-    "venue": "[E] Prednovoletna zabava",
+    "venue": "Prednovoletna zabava",
     "more": "Zasebna zabava 🎉",
     "time": "21:30",
     "type": "closed"
@@ -26,7 +26,7 @@
   {
     "date": "2025-12-12",
     "city": "Ljubljana",
-    "venue": "[E] Prednovoletna zabava",
+    "venue": "Prednovoletna zabava",
     "more": "Zasebna zabava 🎉",
     "time": "19:00",
     "type": "closed"
@@ -50,9 +50,9 @@
   {
     "date": "2025-12-19",
     "city": "Ljubljana",
-    "venue": "[E] Prednovoletna zabava",
+    "venue": "Prednovoletna zabava",
     "more": "Zasebna zabava 🎉",
-    "time": "20:00",
+    "time": "19:30",
     "type": "closed"
   },
   {

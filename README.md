@@ -125,7 +125,7 @@ Telo novice je klasičen **Markdown**.
 
 ### Dogodki (Shows)
 - Podatki o nastopih se generirajo v `src/data/shows.ts` preko skripte `npm run fetch-shows` ali `npm run fetch-all`.
-- Vir je Google Calendar (ICS). Upoštevajo se dogodki z oznako `[E]` in v oknu od enega meseca nazaj do treh mesecev naprej.
+- Vir je Google Calendar (ICS). Upoštevajo se dogodki z oznako `[E]` in v oknu od enega meseca nazaj do treh mesecev naprej. Oznaka `[E]` se uporablja samo za filtriranje in se na strani ne prikazuje.
 - Polja: `date`, `time`, `city`, `venue`, `more` (Markdown → HTML), `type` (`open`/`closed`), `url?`.
 - V Markdown frontmatterju dogodka lahko nastaviš `city`, `venue`, `type` in `url` (če `url` ni nastavljen, se uporabi `URL` iz ICS).
 - Na produkciji Vercel cron pokliče `/api/fetch-all` (interno `fetch-all`) ob 6:00 UTC, kar osveži `shows.ts` + `news.ts`.

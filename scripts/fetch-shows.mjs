@@ -13,6 +13,8 @@ if (!CALENDAR_URL) throw new Error("Missing CALENDAR_URL env var");
 
 const WINDOW_START_MONTHS = -1;
 const WINDOW_END_MONTHS = 3;
+const EVENT_PREFIX = "[E]";
+const EVENT_PREFIX_REGEX = /^\s*\[E\]\s*/i;
 
 async function fetchICS(url) {
     return httpGet(url);
@@ -40,13 +42,23 @@ function splitCity(location) {
     return normalized;
 }
 
+function hasEventPrefix(summary) {
+    if (typeof summary !== "string") return false;
+    return EVENT_PREFIX_REGEX.test(summary);
+}
+
+function stripEventPrefix(text) {
+    if (typeof text !== "string") return text;
+    return text.replace(EVENT_PREFIX_REGEX, "").trim();
+}
+
 function toShow(event) {
-    if (!event.SUMMARY?.startsWith("[E]")) return null;
+    if (!hasEventPrefix(event.SUMMARY)) return null;
     const when = resolveICalDate(event, DEFAULT_TIME_ZONE);
     if (!when || !withinWindow(when)) return null;
     const { meta, content } = parseFrontmatterBlock(event.DESCRIPTION || "");
-    const city = meta.city?.trim() || splitCity(event.LOCATION) || "TBD";
-    const venue = meta.venue?.trim() || (event.SUMMARY || "TBD").trim();
+    const city = stripEventPrefix(meta.city?.trim() || splitCity(event.LOCATION) || "TBD");
+    const venue = stripEventPrefix(meta.venue?.trim() || event.SUMMARY || "TBD");
     const url = meta.url?.trim() || event.url?.trim() || event.URL?.trim();
     let moreRaw = content.replace(/^\n+/, "").replace(/\n+$/, "");
     if (/^-+\s*(\r?\n|$)/.test(moreRaw)) {
