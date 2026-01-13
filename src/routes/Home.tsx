@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "preact/hooks";
 import { Link } from "wouter-preact";
 import { shows, type Show } from "../data/shows";
+import { reviews } from "../data/reviews";
 import { getAllPosts } from "../news/loader";
 import { useMetaTags } from "../hooks/useMetaTags";
 import { formatDisplayDate } from "../utils/date";
@@ -23,6 +24,8 @@ const HERO_SLIDES = [
 const SLIDE_DISPLAY_DURATION = 4500;
 const SLIDE_FADE_DURATION = 2000;
 const SLIDE_INTERVAL = SLIDE_DISPLAY_DURATION + SLIDE_FADE_DURATION;
+const REVIEW_FLIP_MS = 1200;
+const REVIEW_INTERVAL_MS = REVIEW_FLIP_MS + 8000;
 
 function getUpcomingShows(): Show[] {
     const today = new Date();
@@ -56,12 +59,29 @@ export default function Home() {
     });
 
     const upcoming = useMemo(getUpcomingShows, []);
-    const sortedShows = useMemo(() => [...shows].sort((a, b) => a.date.localeCompare(b.date)), []);
-    const fallbackShow = sortedShows.length > 0 ? sortedShows[sortedShows.length - 1] : undefined;
-    const highlight = upcoming[0] ?? fallbackShow;
+    const hasUpcoming = upcoming.length > 0;
+    const highlight = hasUpcoming ? upcoming[0] : undefined;
     const highlightAnchor = highlight ? `show-${highlight.date}` : undefined;
     const highlightLinkTarget = highlight?.url ?? (highlightAnchor ? `/shows#${highlightAnchor}` : "/shows");
     const posts = useMemo(() => getAllPosts().slice(0, 2), []);
+    const [reviewIndex, setReviewIndex] = useState(0);
+    const [isRotating, setIsRotating] = useState(false);
+    const [isReverse, setIsReverse] = useState(false);
+
+    const heroReview =
+        reviews.length > 0 ? (
+            <figure class={`hero-review${isRotating ? " is-rotating" : ""}${isReverse ? " is-reverse" : ""}`}>
+                <p class="hero-review__label">Kaj pravijo o nas</p>
+                <blockquote class="hero-review__quote">“{reviews[reviewIndex].quote}”</blockquote>
+                <figcaption class="hero-review__meta">
+                    <span class="hero-review__author">{reviews[reviewIndex].name}</span>
+                    <span class="hero-review__role">{reviews[reviewIndex].role}</span>
+                    {reviews[reviewIndex].context && (
+                        <span class="hero-review__context">{reviews[reviewIndex].context}</span>
+                    )}
+                </figcaption>
+            </figure>
+        ) : null;
 
     useEffect(() => {
         if (typeof window === "undefined") return;
@@ -77,6 +97,31 @@ export default function Home() {
         }, SLIDE_INTERVAL);
         return () => window.clearInterval(timer);
     }, [slideshowImages.length]);
+
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+        if (reviews.length <= 1) return;
+        let midFlip = 0;
+        let endFlip = 0;
+
+        const startFlip = () => {
+            setIsReverse((prev) => !prev);
+            setIsRotating(true);
+            midFlip = window.setTimeout(() => {
+                setReviewIndex((prev) => (prev + 1) % reviews.length);
+            }, REVIEW_FLIP_MS / 2);
+            endFlip = window.setTimeout(() => {
+                setIsRotating(false);
+            }, REVIEW_FLIP_MS);
+        };
+
+        const interval = window.setInterval(startFlip, REVIEW_INTERVAL_MS);
+        return () => {
+            window.clearInterval(interval);
+            window.clearTimeout(midFlip);
+            window.clearTimeout(endFlip);
+        };
+    }, []);
 
     return (
         <div class="home">
@@ -105,7 +150,7 @@ export default function Home() {
                         <header class="hero-heading">
                             <img class="hero-logo" src="/logos/logo_white.svg" alt="Zasedba Kranjci" />
                         </header>
-                        {highlight && (
+                        {highlight ? (
                             <aside class="hero-card">
                                 <p class="hero-card__label">Naslednja prireditev</p>
                                 <h3>{highlight.city} · {highlight.venue}</h3>
@@ -119,6 +164,8 @@ export default function Home() {
                                     )}
                                 </div>
                             </aside>
+                        ) : (
+                            <aside class="hero-card hero-card--empty" aria-hidden="true" />
                         )}
                         <p class="hero-lead">
                             Zasedba Kranjci prinaša energijo, ki napolni vsak oder in plesišče od intimnih porok ali poslovnih zabav do velikih gala prireditev.<br/>Neverjeten repertoar znanih ter popularnih skladb vseh žanrov v akustični ali plesno / pevski izvedbi.
@@ -146,6 +193,12 @@ export default function Home() {
                     </div>
                 </div>
             </section>
+
+            {heroReview && (
+                <div class="container hero-review-wrapper">
+                    {heroReview}
+                </div>
+            )}
 
             <section class="home-section">
                 <div class="container">
