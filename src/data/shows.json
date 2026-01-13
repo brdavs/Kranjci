@@ -1,21 +1,5 @@
 [
   {
-    "date": "2025-11-28",
-    "city": "Ljubljana",
-    "venue": "Prednovoletna zabava",
-    "more": "Zasebna zabava 🎉",
-    "time": "20:00",
-    "type": "closed"
-  },
-  {
-    "date": "2025-11-30",
-    "city": "Radovljica",
-    "venue": "Glavni trg",
-    "more": "Koncert ob prižigu lučk na glavnem trgu v Radovljici.",
-    "time": "17:00",
-    "type": "open"
-  },
-  {
     "date": "2025-12-05",
     "city": "Ljubljana",
     "venue": "Prednovoletna zabava",
@@ -35,7 +19,7 @@
     "date": "2025-12-13",
     "city": "Škofljica",
     "venue": "Mestno jedro",
-    "more": "Koncert ob Veselem decembru na Škofljici.",
+    "more": "Koncert ob Veselem decembru na Škofljici.\nhttps://skofljica.si/objava/1203017",
     "time": "20:00",
     "type": "open"
   },
