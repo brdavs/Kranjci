@@ -9,4 +9,4 @@ node_modules
 dist/
 openspec/
 e2e/
-AGENTS.md
+AGENTS.*
