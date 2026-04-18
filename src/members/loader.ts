@@ -30,10 +30,17 @@ function slugFromPath(p: string): string {
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 
+function sanitizeHtml(html: string): string {
+    if (typeof DOMPurify.sanitize === "function") {
+        return DOMPurify.sanitize(html);
+    }
+    return html;
+}
+
 const MEMBERS: Member[] = Object.entries(rawMods).map(([p, raw]) => {
     const { meta, body } = parseFrontmatter(raw);
     const slug = slugFromPath(p);
-    const html = DOMPurify.sanitize(marked.parse(body) as string);
+    const html = sanitizeHtml(marked.parse(body) as string);
     let socials: SocialLink[] | undefined;
     if (meta.socials) {
         try {

@@ -1,16 +1,5 @@
 import { useEffect } from "preact/hooks";
-
-type MetaOptions = {
-    title?: string;
-    description?: string;
-    path?: string;
-    image?: string;
-    type?: string;
-};
-
-export const SITE_NAME = "Zasedba Kranjci";
-export const DEFAULT_DESCRIPTION = "Zasedba Kranjci glasbeno obarva poroke, poslovne dogodke in vsakovrstne prireditve po vsej Sloveniji.";
-export const DEFAULT_OG_IMAGE = "/media/home/00.webp";
+import { resolveMeta, SITE_NAME, type MetaOptions } from "../seo/metadata";
 
 function upsertMeta(attr: "name" | "property", key: string, value: string) {
     if (typeof document === "undefined") return;
@@ -34,38 +23,28 @@ function updateCanonical(url: string) {
     link.href = url;
 }
 
-function resolveUrl(path?: string): string | undefined {
-    if (typeof window === "undefined") return undefined;
-    const target = path ?? window.location.pathname + window.location.search;
-    return new URL(target, window.location.origin).toString();
-}
-
 export function useMetaTags(options: MetaOptions) {
     const { title, description, path, image, type } = options;
+
     useEffect(() => {
         if (typeof document === "undefined") return;
-        const resolvedTitle = title ? `${title} · ${SITE_NAME}` : SITE_NAME;
-        const resolvedDescription = description || DEFAULT_DESCRIPTION;
-        const resolvedImage = image || DEFAULT_OG_IMAGE;
-        const resolvedType = type || "website";
-        const resolvedUrl = resolveUrl(path);
+        const fallbackPath = window.location.pathname + window.location.search;
+        const resolved = resolveMeta({ title, description, path: path ?? fallbackPath, image, type });
 
-        document.title = resolvedTitle;
-        upsertMeta("name", "description", resolvedDescription);
-        upsertMeta("property", "og:title", resolvedTitle);
-        upsertMeta("property", "og:description", resolvedDescription);
-        upsertMeta("property", "og:type", resolvedType);
-        upsertMeta("property", "og:image", resolvedImage);
+        document.title = resolved.title;
+        upsertMeta("name", "description", resolved.description);
+        upsertMeta("property", "og:title", resolved.title);
+        upsertMeta("property", "og:description", resolved.description);
+        upsertMeta("property", "og:type", resolved.type);
+        upsertMeta("property", "og:image", resolved.image);
         upsertMeta("property", "og:site_name", SITE_NAME);
 
-        if (resolvedUrl) {
-            upsertMeta("property", "og:url", resolvedUrl);
-            updateCanonical(resolvedUrl);
-        }
+        upsertMeta("property", "og:url", resolved.canonical);
+        updateCanonical(resolved.canonical);
 
         upsertMeta("name", "twitter:card", "summary_large_image");
-        upsertMeta("name", "twitter:title", resolvedTitle);
-        upsertMeta("name", "twitter:description", resolvedDescription);
-        upsertMeta("name", "twitter:image", resolvedImage);
+        upsertMeta("name", "twitter:title", resolved.title);
+        upsertMeta("name", "twitter:description", resolved.description);
+        upsertMeta("name", "twitter:image", resolved.image);
     }, [title, description, path, image, type]);
 }

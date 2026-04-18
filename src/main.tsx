@@ -1,6 +1,13 @@
-import { render } from "preact";
+import { hydrate, render } from "preact";
 import { inject } from "@vercel/analytics";
 import { App } from "./app";
 
-render(<App />, document.getElementById("app")!);
+const appRoot = document.getElementById("app")!;
+
+if (appRoot.hasChildNodes()) {
+    hydrate(<App />, appRoot);
+} else {
+    render(<App />, appRoot);
+}
+
 inject();

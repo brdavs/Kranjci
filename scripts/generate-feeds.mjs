@@ -80,6 +80,8 @@ async function buildSitemap(posts) {
         { loc: `${SITE_URL}/`,        lastmod: now },
         { loc: `${SITE_URL}/shows`,   lastmod: now },
         { loc: `${SITE_URL}/music`,   lastmod: now },
+        { loc: `${SITE_URL}/history`, lastmod: now },
+        { loc: `${SITE_URL}/clients`, lastmod: now },
         { loc: `${SITE_URL}/contact`, lastmod: now },
         { loc: `${SITE_URL}/news`,    lastmod: posts[0]?.lastmod || now },
         { loc: `${SITE_URL}/members`, lastmod: now },
