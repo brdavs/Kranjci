@@ -991,6 +991,13 @@ footer .footer-logo { height: 38px; }
 
 .contact-page { display: flex; flex-direction: column; gap: 32px; }
 .contact-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+.contact-vertical-stack {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: 1fr;
+    width: 100%;
+    min-width: 0;
+}
 .contact-card h3 { margin-top: 0; margin-bottom: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-size: 14px; color: var(--muted); }
 .contact-card p { margin: 0 0 12px 0; line-height: 1.6; }
 .contact-form { display: flex; flex-direction: column; gap: 12px; }
@@ -998,6 +1005,25 @@ footer .footer-logo { height: 38px; }
 .contact-form input,
 .contact-form textarea { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #232326; background: #0f0f10; color: #fff; font: inherit; }
 .contact-form textarea { resize: vertical; min-height: 140px; }
+.contact-consent {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: flex-start;
+    text-transform: none;
+    letter-spacing: normal;
+    color: var(--muted);
+}
+.contact-consent input {
+    width: auto;
+    margin: 0;
+    accent-color: var(--brand);
+}
+.contact-consent span {
+    text-transform: none;
+    font-size: 13px;
+    line-height: 1.45;
+}
 .contact-honeypot { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 .contact-captcha { margin: 8px 0; }
 .contact-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }

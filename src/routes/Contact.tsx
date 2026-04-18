@@ -2,6 +2,11 @@ import { useEffect, useState } from "preact/hooks";
 import type { ComponentChildren } from "preact";
 import { useMetaTags } from "../hooks/useMetaTags";
 
+type NewsletterApiResponse = {
+    ok: boolean;
+    error?: string;
+};
+
 const DIRECT_CONTACTS = [
     { name: "Igor Oražem", phone: "+386 41 577 893" },
     { name: "Martin Oražem", phone: "+386 31 635 987" },
@@ -88,6 +93,11 @@ export default function Contact() {
     const [website, setWebsite] = useState("");
     const [status, setStatus] = useState<"idle" | "sending" | "ok" | "err">("idle");
     const [error, setError] = useState<string>("");
+    const [newsletterName, setNewsletterName] = useState("");
+    const [newsletterEmail, setNewsletterEmail] = useState("");
+    const [newsletterConsent, setNewsletterConsent] = useState(false);
+    const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "sending" | "ok" | "err">("idle");
+    const [newsletterError, setNewsletterError] = useState<string>("");
     const hcaptchaSiteKey = import.meta.env.VITE_HCAPTCHA_SITEKEY || "";
     const [captchaReady, setCaptchaReady] = useState(!hcaptchaSiteKey);
     const [captchaLoadError, setCaptchaLoadError] = useState<string>("");
@@ -124,6 +134,7 @@ export default function Contact() {
                 setCaptchaLoadError(err?.message || "hCaptcha se ni naložila.");
             });
     }, [hcaptchaSiteKey]);
+
     async function onSubmit(e: Event) {
         e.preventDefault();
         setStatus("sending");
@@ -160,6 +171,44 @@ export default function Contact() {
         } catch (err: any) {
             setStatus("err");
             setError(err?.message || "Napaka pri pošiljanju.");
+        }
+    }
+
+    async function onSubmitNewsletter(e: Event) {
+        e.preventDefault();
+        if (!newsletterConsent) {
+            setNewsletterStatus("err");
+            setNewsletterError("Za prijavo je potrebna izjava o privolitvi za varstvo podatkov.");
+            return;
+        }
+
+        setNewsletterStatus("sending");
+        setNewsletterError("");
+
+        try {
+            const res = await fetch("/api/newsletter-signup", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name: newsletterName,
+                    email: newsletterEmail,
+                    gdprConsent: newsletterConsent
+                })
+            });
+
+            const json = (await res.json()) as NewsletterApiResponse;
+            if (json.ok) {
+                setNewsletterStatus("ok");
+                setNewsletterName("");
+                setNewsletterEmail("");
+                setNewsletterConsent(false);
+            } else {
+                setNewsletterStatus("err");
+                setNewsletterError(json.error || "Napaka pri prijavi na novice.");
+            }
+        } catch (err: any) {
+            setNewsletterStatus("err");
+            setNewsletterError(err?.message || "Napaka pri prijavi na novice.");
         }
     }
 
@@ -200,20 +249,50 @@ export default function Contact() {
                     </form>
                 </ContactCard>
 
-                <ContactCard title="Mobilni telefon in e-pošta">
-                    <dl class="contact-list">
-                        {DIRECT_CONTACTS.map((contact) => (
-                            <div key={contact.phone}>
-                                <dt>{contact.name}</dt>
-                                <dd><a href={`tel:${contact.phone.replace(/\s+/g, "")}`}>{contact.phone}</a></dd>
+                <div class="contact-vertical-stack">
+                    <ContactCard title="Mobilni telefon in e-pošta">
+                        <dl class="contact-list">
+                            {DIRECT_CONTACTS.map((contact) => (
+                                <div key={contact.phone}>
+                                    <dt>{contact.name}</dt>
+                                    <dd><a href={`tel:${contact.phone.replace(/\s+/g, "")}`}>{contact.phone}</a></dd>
+                                </div>
+                            ))}
+                        </dl>
+                        <p class="contact-email">
+                            e-pošta za splošni kontakt:<br />
+                            <a href="mailto:booking@kranjci.si">booking@kranjci.si</a>
+                        </p>
+                    </ContactCard>
+
+                    <ContactCard title="Prijava na e-novice">
+                        <form onSubmit={onSubmitNewsletter} class="contact-form">
+                            <label>
+                                Ime
+                                <input value={newsletterName} onInput={(e: any) => setNewsletterName(e.currentTarget.value)} required />
+                            </label>
+                            <label>
+                                E-pošta
+                                <input type="email" value={newsletterEmail} onInput={(e: any) => setNewsletterEmail(e.currentTarget.value)} required />
+                            </label>
+                            <label class="contact-consent">
+                                <input type="checkbox" checked={newsletterConsent} onInput={(e: any) => setNewsletterConsent(e.currentTarget.checked)} required />
+                                <span>
+                                    Strinjam se z obdelavo osebnih podatkov za namen prejemanja e-novic Zasedbe Kranjci.
+                                    Svoje privolitev lahko kadarkoli prekličete.
+                                </span>
+                            </label>
+
+                            <div class="contact-actions">
+                                <button class="btn" disabled={newsletterStatus === "sending"} type="submit">
+                                    {newsletterStatus === "sending" ? "Prijava…" : "Prijava na novice"}
+                                </button>
+                                {newsletterStatus === "ok" && <span class="contact-status contact-status--ok">Prijava je bila uspešna.</span>}
+                                {newsletterStatus === "err" && <span class="contact-status contact-status--err">{newsletterError}</span>}
                             </div>
-                        ))}
-                    </dl>
-                    <p class="contact-email">
-                        e-pošta za splošni kontakt:<br />
-                        <a href="mailto:booking@kranjci.si">booking@kranjci.si</a>
-                    </p>
-                </ContactCard>
+                        </form>
+                    </ContactCard>
+                </div>
             </div>
 
             <ContactCard title="Zasedba Kranjci deluje preko več pravnih subjektov">
