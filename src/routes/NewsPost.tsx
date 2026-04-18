@@ -1,12 +1,13 @@
 import { useRoute, Link } from "wouter-preact";
-import { getPost } from "../news/loader";
 import { useMetaTags } from "../hooks/useMetaTags";
 import { formatDisplayDateTime } from "../utils/date";
+import { useRemoteNews } from "../hooks/useRemoteNews";
 
 export default function NewsPost() {
     const [, params] = useRoute("/news/:slug");
     const slug = params?.slug || "";
-    const post = getPost(slug);
+    const { items: posts } = useRemoteNews();
+    const post = posts.find((p) => p.slug === slug);
     const metaTitle = post?.title ?? "Novica ni bila najdena";
     const metaDescription = post?.excerpt ?? "Preberi najnovejše dogajanje Zasedbe Kranjci.";
     const path = slug ? `/news/${slug}` : "/news";

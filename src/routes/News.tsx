@@ -1,10 +1,10 @@
 import { Link } from "wouter-preact";
-import { getAllPosts } from "../news/loader";
+import { useRemoteNews } from "../hooks/useRemoteNews";
 import { useMetaTags } from "../hooks/useMetaTags";
 import { formatDisplayDateTime } from "../utils/date";
 
 export default function News() {
-    const posts = getAllPosts();
+    const { items: posts } = useRemoteNews();
     useMetaTags({
         title: "Novice",
         description: "Utrinki, zgodbe in sveže novice Zasedbe Kranjci.",

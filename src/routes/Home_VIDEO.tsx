@@ -203,7 +203,7 @@ export default function Home() {
                         )}
                         {upcoming.map((show) => (
                             <article class="upcoming-card" key={show.date + show.venue}>
-                                <p class="upcoming-date">{fmtDate(show.date)}</p>
+                                <p class="upcoming-date">{formatDisplayDate(show.date)}</p>
                                 <h3>{show.city}</h3>
                                 <p class="upcoming-venue">{show.venue}</p>
                                 <div class="upcoming-actions">

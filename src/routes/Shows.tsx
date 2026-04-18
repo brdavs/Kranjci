@@ -1,5 +1,5 @@
-import { shows } from "../data/shows";
 import { useMetaTags } from "../hooks/useMetaTags";
+import { useRemoteShows } from "../hooks/useRemoteShows";
 
 function fmt(d: string): string {
     const x = new Date(d + "T00:00:00");
@@ -13,6 +13,8 @@ export default function Shows() {
         description: "Preverite prihajajoče dogodke Zasedbe Kranjci.",
         path: "/shows"
     });
+
+    const { items: shows } = useRemoteShows();
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
