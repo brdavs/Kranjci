@@ -2,9 +2,6 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { fetchCalendarNews } from "./news/calendar.mjs";
-import { fetchFacebookNews } from "./news/facebook.mjs";
-import { fetchInstagramNews } from "./news/instagram.mjs";
-import { splitList } from "./utils/fetch-utils.mjs";
 import { loadEnv } from "./utils/env.mjs";
 import { getDataPath, writeJsonAndUpload } from "./utils/output.mjs";
 
@@ -12,17 +9,6 @@ loadEnv();
 
 const ROOT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const NEWS_OUTPUT_JSON = getDataPath("news.json");
-
-const META_GRAPH_TOKEN = process.env.META_GRAPH_TOKEN?.trim();
-const META_FACEBOOK_PAGES = splitList(process.env.META_FACEBOOK_PAGES);
-const META_INSTAGRAM_USERS = splitList(process.env.META_INSTAGRAM_USERS);
-const META_NEWS_LIMIT = Number(process.env.META_NEWS_LIMIT || 5);
-
-function withinNewsWindow(date) {
-    const todayEnd = new Date();
-    todayEnd.setHours(23, 59, 59, 999);
-    return date <= todayEnd;
-}
 
 async function readExistingNews() {
     try {
@@ -46,15 +32,10 @@ async function main() {
     const sources = [];
     console.log("Fetching calendar news...");
     sources.push(fetchCalendarNews());
-    // Temporarily disabled Meta (Facebook/Instagram) news fetching.
-    // if (META_GRAPH_TOKEN && META_FACEBOOK_PAGES.length > 0) {
-    //     console.log(`Fetching Facebook news for: ${META_FACEBOOK_PAGES.join(", ")}`);
-    //     sources.push(fetchFacebookNews({ token: META_GRAPH_TOKEN, pageIds: META_FACEBOOK_PAGES, limit: META_NEWS_LIMIT, withinWindow }));
-    // }
-    // if (META_GRAPH_TOKEN && META_INSTAGRAM_USERS.length > 0) {
-    //     console.log(`Fetching Instagram news for: ${META_INSTAGRAM_USERS.join(", ")}`);
-    //     sources.push(fetchInstagramNews({ token: META_GRAPH_TOKEN, userIds: META_INSTAGRAM_USERS, limit: META_NEWS_LIMIT, withinWindow }));
-    // }
+
+    // Meta (Facebook/Instagram) ingestion is intentionally disabled for now.
+    // We only ingest calendar-backed news in this script.
+
     const results = await Promise.allSettled(sources);
     const newsItems = results.flatMap((result) => (result.status === "fulfilled" ? result.value : []));
     const existingNews = await readExistingNews();
