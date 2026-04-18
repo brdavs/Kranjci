@@ -35,6 +35,9 @@ export default function Contact() {
     const [captchaReady, setCaptchaReady] = useState(!altchaChallengeUrl);
     const [captchaLoadError, setCaptchaLoadError] = useState<string>("");
 
+    const isContactFormReady = name.trim() && email.trim() && message.trim() && (!altchaChallengeUrl || Boolean(altchaPayload));
+    const isNewsletterFormReady = newsletterName.trim() && newsletterEmail.trim() && newsletterConsent;
+
     // ----- HCAPTCHA FALLBACK (disabled) -------------------------------------
     // Uncomment this block and the disabled call/site in `onSubmit` + render block
     // below to restore the previous hCaptcha client flow.
@@ -261,7 +264,7 @@ export default function Contact() {
                         </div>
                         <small class="contact-status">Ali potrdite: hCaptcha.</small> */}
                         <div class="contact-actions">
-                            <button class="btn" disabled={status === "sending" || (altchaChallengeUrl && !captchaReady)} type="submit">
+                            <button class="btn" disabled={status === "sending" || !isContactFormReady} type="submit">
                                 {status === "sending" ? "Pošiljanje…" : "Pošlji"}
                             </button>
                             {status === "ok" && <span class="contact-status contact-status--ok">Poslano. Hvala!</span>}
@@ -305,7 +308,7 @@ export default function Contact() {
                             </label>
 
                             <div class="contact-actions">
-                                <button class="btn" disabled={newsletterStatus === "sending"} type="submit">
+                                <button class="btn" disabled={newsletterStatus === "sending" || !isNewsletterFormReady} type="submit">
                                     {newsletterStatus === "sending" ? "Prijava…" : "Prijava na novice"}
                                 </button>
                                 {newsletterStatus === "ok" && <span class="contact-status contact-status--ok">Prijava je bila uspešna.</span>}

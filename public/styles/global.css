@@ -278,6 +278,18 @@ a:hover {
     box-shadow: 0 14px 32px rgba(255, 102, 0, 0.32);
 }
 
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.btn:disabled:hover {
+    background: var(--brand);
+    color: #fff;
+    box-shadow: none;
+}
+
 .btn-secondary {
     background: transparent;
     color: var(--fg);
