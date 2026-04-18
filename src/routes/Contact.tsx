@@ -1,90 +1,20 @@
-import { useEffect, useState } from "preact/hooks";
-import type { ComponentChildren } from "preact";
+import { useEffect, useRef, useState } from "preact/hooks";
+import type { JSX } from "preact";
 import { useMetaTags } from "../hooks/useMetaTags";
+import { ContactCard } from "./contact/ContactCard";
+import { COMPANIES, DIRECT_CONTACTS, STAGE_SETUPS } from "./contact/contactData";
+import "altcha";
+import { toErrorMessage } from "./contact/altcha";
+
+type ContactApiResponse = {
+    ok: boolean;
+    error?: string;
+};
 
 type NewsletterApiResponse = {
     ok: boolean;
     error?: string;
 };
-
-const DIRECT_CONTACTS = [
-    { name: "Igor Oražem", phone: "+386 41 577 893" },
-    { name: "Martin Oražem", phone: "+386 31 635 987" },
-    { name: "Toni Anžlovar", phone: "+386 41 900 855" },
-    { name: "Mitja Jeršič", phone: "+386 40 540 852" }
-];
-
-const COMPANIES = [
-    {
-        name: "Artisan, umetniško ustvarjanje, Igor Oražem s.p.",
-        address: ["Albrehtova ulica 88a, 1291 Škofljica", "1291 Škofljica"],
-        tax: "SI46666974",
-        iban: "SI56 6100 0001 1797 196 · Delavska hranilnica d.d.",
-        swift: "HDELSI22"
-    },
-    {
-        name: "Formalibre d.o.o.",
-        address: ["Brodarjev trg 7", "1000 Ljubljana"],
-        tax: "SI21653917",
-        iban: "LT57 3250 0081 0606 2936 · Revolut Business",
-        swift: "RETBLT21XXX"
-    },
-    {
-        name: "Martin Oražem s.p.",
-        address: ["Prigorica 97a", "1331 Dolenja vas"],
-        tax: "89112130 (ni davčni zavezanec)",
-        iban: "SI56 6100 0000 5742 068 · Delavska hranilnica d.d.",
-        swift: "HDELSI22"
-    },
-    {
-        name: "Umetniško uprizarjanje, Mitja Jeršič s.p.",
-        address: ["Ulica Mirkota Roglja 3", "4270 Jesenice"],
-        tax: "71851569 (ni davčni zavezanec)",
-        iban: "SI56 6100 0001 1339 647 · Delavska hranilnica d.d.",
-        swift: "HDELSI22"
-    }
-];
-
-const STAGE_SETUPS = [
-    { label: "Inštrumentalna zasedba Kranjci", size: "8 m²" },
-    { label: "Koncertna »Cross-over« zasedba Kranjci", size: "14 m²" },
-    { label: "Pevsko plesna »live band« zasedba Kranjci", size: "20 m²" }
-];
-
-declare global {
-    interface Window {
-        hcaptcha?: {
-            reset: (widgetId?: string | number) => void;
-        };
-    }
-}
-
-let hcaptchaLoader: Promise<void> | null = null;
-function ensureHCaptchaScript() {
-    if (typeof window !== "undefined" && window.hcaptcha) return Promise.resolve();
-    if (!hcaptchaLoader) {
-        hcaptchaLoader = new Promise<void>((resolve, reject) => {
-            if (typeof document === "undefined") {
-                reject(new Error("Document is not available"));
-                return;
-            }
-            const existing = document.querySelector<HTMLScriptElement>('script[src="https://js.hcaptcha.com/1/api.js"]');
-            if (existing) {
-                existing.addEventListener("load", () => resolve(), { once: true });
-                existing.addEventListener("error", () => reject(new Error("hCaptcha failed to load")), { once: true });
-                return;
-            }
-            const script = document.createElement("script");
-            script.src = "https://js.hcaptcha.com/1/api.js";
-            script.async = true;
-            script.defer = true;
-            script.onload = () => resolve();
-            script.onerror = () => reject(new Error("hCaptcha failed to load"));
-            document.head.appendChild(script);
-        });
-    }
-    return hcaptchaLoader;
-}
 
 export default function Contact() {
     const [name, setName] = useState("");
@@ -93,14 +23,24 @@ export default function Contact() {
     const [website, setWebsite] = useState("");
     const [status, setStatus] = useState<"idle" | "sending" | "ok" | "err">("idle");
     const [error, setError] = useState<string>("");
+
     const [newsletterName, setNewsletterName] = useState("");
     const [newsletterEmail, setNewsletterEmail] = useState("");
     const [newsletterConsent, setNewsletterConsent] = useState(false);
     const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "sending" | "ok" | "err">("idle");
     const [newsletterError, setNewsletterError] = useState<string>("");
-    const hcaptchaSiteKey = import.meta.env.VITE_HCAPTCHA_SITEKEY || "";
-    const [captchaReady, setCaptchaReady] = useState(!hcaptchaSiteKey);
+    const altchaChallengeUrl = import.meta.env.VITE_ALTCHA_CHALLENGE_URL || "";
+    const altchaWidgetRef = useRef<HTMLElement & { reset?: () => void }>(null);
+    const [altchaPayload, setAltchaPayload] = useState("");
+    const [captchaReady, setCaptchaReady] = useState(!altchaChallengeUrl);
     const [captchaLoadError, setCaptchaLoadError] = useState<string>("");
+
+    // ----- HCAPTCHA FALLBACK (disabled) -------------------------------------
+    // Uncomment this block and the disabled call/site in `onSubmit` + render block
+    // below to restore the previous hCaptcha client flow.
+    // const hCaptchaSiteKey = import.meta.env.VITE_HCAPTCHA_SITEKEY || "";
+    // const [hCaptchaToken, setHCaptchaToken] = useState("");
+    // const [hCaptchaReady, setHCaptchaReady] = useState(!hCaptchaSiteKey);
 
     useMetaTags({
         title: "Kontakt",
@@ -108,69 +48,141 @@ export default function Contact() {
         path: "/contact"
     });
 
-    const readCaptchaToken = () => {
-        if (typeof document === "undefined") return "";
-        const field = document.querySelector<HTMLTextAreaElement>('textarea[name="h-captcha-response"]');
-        return field?.value?.trim() || "";
-    };
-
-    const resetCaptcha = () => {
-        if (typeof window !== "undefined" && typeof window.hcaptcha?.reset === "function") {
-            try { window.hcaptcha.reset(); } catch { /* ignore */ }
-        }
-        if (typeof document !== "undefined") {
-            const field = document.querySelector<HTMLTextAreaElement>('textarea[name="h-captcha-response"]');
-            if (field) field.value = "";
-        }
-    };
+    const onNameInput = (e: JSX.TargetedEvent<HTMLInputElement, Event>) => setName(e.currentTarget.value);
+    const onEmailInput = (e: JSX.TargetedEvent<HTMLInputElement, Event>) => setEmail(e.currentTarget.value);
+    const onWebsiteInput = (e: JSX.TargetedEvent<HTMLInputElement, Event>) => setWebsite(e.currentTarget.value);
+    const onMessageInput = (e: JSX.TargetedEvent<HTMLTextAreaElement, Event>) => setMessage(e.currentTarget.value);
+    const onNewsletterNameInput = (e: JSX.TargetedEvent<HTMLInputElement, Event>) => setNewsletterName(e.currentTarget.value);
+    const onNewsletterEmailInput = (e: JSX.TargetedEvent<HTMLInputElement, Event>) => setNewsletterEmail(e.currentTarget.value);
+    const onNewsletterConsentInput = (e: JSX.TargetedEvent<HTMLInputElement, Event>) => setNewsletterConsent(e.currentTarget.checked);
 
     useEffect(() => {
-        if (!hcaptchaSiteKey) return;
-        setCaptchaLoadError("");
-        ensureHCaptchaScript()
-            .then(() => setCaptchaReady(true))
-            .catch((err) => {
-                setCaptchaReady(false);
-                setCaptchaLoadError(err?.message || "hCaptcha se ni naložila.");
-            });
-    }, [hcaptchaSiteKey]);
+        setAltchaPayload("");
 
+        if (!altchaChallengeUrl) {
+            setCaptchaReady(true);
+            setCaptchaLoadError("");
+            return;
+        }
+
+        setCaptchaReady(false);
+        setCaptchaLoadError("");
+
+        const widget = altchaWidgetRef.current;
+        if (!widget) return;
+
+        const handleLoad = () => setCaptchaReady(true);
+        const handleStateChange = (ev: Event) => {
+            const detail = (ev as CustomEvent<{ payload?: string | null }>).detail;
+            const nextPayload = detail?.payload;
+            setAltchaPayload(typeof nextPayload === "string" ? nextPayload : "");
+        };
+
+        widget.addEventListener("load", handleLoad);
+        widget.addEventListener("statechange", handleStateChange);
+        return () => {
+            widget.removeEventListener("load", handleLoad);
+            widget.removeEventListener("statechange", handleStateChange);
+        };
+    }, [altchaChallengeUrl]);
+
+    // useEffect(() => {
+    //     setHCaptchaToken("");
+    //
+    //     if (!hCaptchaSiteKey) {
+    //         setHCaptchaReady(true);
+    //         return;
+    //     }
+    //
+    //     const scriptId = "hcaptcha-script";
+    //     if (!document.getElementById(scriptId)) {
+    //         const script = document.createElement("script");
+    //         script.id = scriptId;
+    //         script.src = "https://js.hcaptcha.com/1/api.js?render=explicit&onload=hcaptchaReady";
+    //         script.async = true;
+    //         script.defer = true;
+    //         document.body.appendChild(script);
+    //     }
+    //
+    //     const renderWidget = () => {
+    //         const widget = document.querySelector(".h-captcha") as HTMLElement | null;
+    //         if (window.hcaptcha && widget && typeof window.hcaptcha.render === "function") {
+    //             window.hcaptcha.render(widget, {
+    //                 sitekey: hCaptchaSiteKey,
+    //                 callback: (token: string) => setHCaptchaToken(token),
+    //                 "error-callback": () => setHCaptchaToken("")
+    //             });
+    //             setHCaptchaReady(true);
+    //         }
+    //     };
+    //
+    //     const timer = window.setInterval(() => {
+    //         if (window.hcaptcha) {
+    //             window.clearInterval(timer);
+    //             renderWidget();
+    //         }
+    //     }, 100);
+    //
+    //     return () => window.clearInterval(timer);
+    // }, [hCaptchaSiteKey]);
     async function onSubmit(e: Event) {
         e.preventDefault();
         setStatus("sending");
         setError("");
         try {
-            let hcaptchaToken: string | undefined;
-            if (hcaptchaSiteKey) {
+            let altchaPayloadValue: string | undefined;
+            if (altchaChallengeUrl) {
                 if (!captchaReady) {
                     setStatus("err");
-                    setError("hCaptcha ni pripravljena. Poskusite znova.");
+                    setError("ALTCHA ni pripravljena. Poskusite znova.");
                     return;
                 }
-                hcaptchaToken = readCaptchaToken();
-                if (!hcaptchaToken) {
+                altchaPayloadValue = altchaPayload.trim();
+                if (!altchaPayloadValue) {
                     setStatus("err");
-                    setError("Prosimo, potrdite, da niste robot.");
+                    setError("Prosimo, potrdite preverjanje pred oddajo.");
                     return;
                 }
             }
+
+            // ----- HCAPTCHA FALLBACK (disabled) ---------------------------------
+            // if (!altchaChallengeUrl) {
+            //     if (!hCaptchaReady) {
+            //         setStatus("err");
+            //         setError("hCaptcha ni pripravljen. Poskusite znova.");
+            //         return;
+            //     }
+            //     if (!hCaptchaToken) {
+            //         setStatus("err");
+            //         setError("Prosimo, opravite preverjanje pred oddajo.");
+            //         return;
+            //     }
+            // }
+
             const res = await fetch("/api/contact", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name, email, message, website, hcaptchaToken })
+                // body: JSON.stringify({ name, email, message, website, hCaptchaToken })
+                body: JSON.stringify({ name, email, message, website, altchaPayload: altchaPayloadValue })
             });
-            const json = await res.json();
+            const json = (await res.json()) as ContactApiResponse;
             if (json.ok) {
                 setStatus("ok");
                 setName(""); setEmail(""); setMessage(""); setWebsite("");
-                if (hcaptchaSiteKey) resetCaptcha();
+                if (altchaChallengeUrl) {
+                    setAltchaPayload("");
+                    altchaWidgetRef.current?.reset?.();
+
+                    // } else {
+                    //     setHCaptchaToken("");
+                }
             } else {
                 setStatus("err");
                 setError(json.error || "Napaka pri pošiljanju.");
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             setStatus("err");
-            setError(err?.message || "Napaka pri pošiljanju.");
+            setError(toErrorMessage(err));
         }
     }
 
@@ -206,9 +218,9 @@ export default function Contact() {
                 setNewsletterStatus("err");
                 setNewsletterError(json.error || "Napaka pri prijavi na novice.");
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
             setNewsletterStatus("err");
-            setNewsletterError(err?.message || "Napaka pri prijavi na novice.");
+            setNewsletterError(toErrorMessage(err));
         }
     }
 
@@ -221,26 +233,35 @@ export default function Contact() {
                     <p>Izpolnite obrazec in vrnili se bomo z odgovorom v najkrajšem času.</p>
                     <form onSubmit={onSubmit} class="contact-form">
                         <label>Ime
-                            <input value={name} onInput={(e: any) => setName(e.currentTarget.value)} required />
+                            <input value={name} onInput={onNameInput} required />
                         </label>
                         <label>E-pošta
-                            <input type="email" value={email} onInput={(e: any) => setEmail(e.currentTarget.value)} required />
+                            <input type="email" value={email} onInput={onEmailInput} required />
                         </label>
                         <label class="contact-honeypot">
                             Website
-                            <input value={website} onInput={(e: any) => setWebsite(e.currentTarget.value)} tabIndex={-1} autoComplete="off" />
+                            <input value={website} onInput={onWebsiteInput} tabIndex={-1} autoComplete="off" />
                         </label>
                         <label>Sporočilo
-                            <textarea value={message} onInput={(e: any) => setMessage(e.currentTarget.value)} required rows={6}></textarea>
+                            <textarea value={message} onInput={onMessageInput} required rows={6}></textarea>
                         </label>
-                        {hcaptchaSiteKey && (
+                        {altchaChallengeUrl && (
                             <div class="contact-captcha">
-                                <div class="h-captcha" data-sitekey={hcaptchaSiteKey}></div>
+                                <altcha-widget
+                                    ref={altchaWidgetRef}
+                                    challenge={altchaChallengeUrl}
+                                    name="altcha"
+                                />
                                 {captchaLoadError && <span class="contact-status contact-status--err">{captchaLoadError}</span>}
                             </div>
                         )}
+                        {/* ----- HCAPTCHA FALLBACK (disabled) ------------------------------ */}
+                        {/* <div class="contact-captcha">
+                            <div class="h-captcha" data-sitekey={hCaptchaSiteKey}></div>
+                        </div>
+                        <small class="contact-status">Ali potrdite: hCaptcha.</small> */}
                         <div class="contact-actions">
-                            <button class="btn" disabled={status === "sending" || (hcaptchaSiteKey && !captchaReady)} type="submit">
+                            <button class="btn" disabled={status === "sending" || (altchaChallengeUrl && !captchaReady)} type="submit">
                                 {status === "sending" ? "Pošiljanje…" : "Pošlji"}
                             </button>
                             {status === "ok" && <span class="contact-status contact-status--ok">Poslano. Hvala!</span>}
@@ -269,14 +290,14 @@ export default function Contact() {
                         <form onSubmit={onSubmitNewsletter} class="contact-form">
                             <label>
                                 Ime
-                                <input value={newsletterName} onInput={(e: any) => setNewsletterName(e.currentTarget.value)} required />
+                                <input value={newsletterName} onInput={onNewsletterNameInput} required />
                             </label>
                             <label>
                                 E-pošta
-                                <input type="email" value={newsletterEmail} onInput={(e: any) => setNewsletterEmail(e.currentTarget.value)} required />
+                                <input type="email" value={newsletterEmail} onInput={onNewsletterEmailInput} required />
                             </label>
                             <label class="contact-consent">
-                                <input type="checkbox" checked={newsletterConsent} onInput={(e: any) => setNewsletterConsent(e.currentTarget.checked)} required />
+                                <input type="checkbox" checked={newsletterConsent} onInput={onNewsletterConsentInput} required />
                                 <span>
                                     Strinjam se z obdelavo osebnih podatkov za namen prejemanja e-novic Zasedbe Kranjci.
                                     Svoje privolitev lahko kadarkoli prekličete.
@@ -328,14 +349,5 @@ export default function Contact() {
                 </p>
             </ContactCard>
         </div>
-    );
-}
-
-function ContactCard({ title, children }: { title: string; children: ComponentChildren }) {
-    return (
-        <section class="card contact-card">
-            <h3>{title}</h3>
-            {children}
-        </section>
     );
 }
