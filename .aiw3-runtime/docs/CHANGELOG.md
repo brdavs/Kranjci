@@ -1,0 +1,34 @@
+# Changelog
+
+- `2026-04-16T00:00:00Z` `2026-04-16-seed-project-documentation` `task_created`: Seed project documentation per repo rules
+- `2026-04-16T00:10:00Z` `2026-04-16-seed-project-documentation` `completed`: Seeded and refined runtime project documentation
+- `2026-04-17T10:00:00Z` `2026-04-16-seed-project-documentation` `completed`: Rebuilt runtime documentation against current repository code
+- `2026-04-17T10:40:00Z` `2026-04-16-seed-project-documentation` `completed`: Finalized DECISIONS, OPEN_ITEMS, and ONBOARDING runtime docs and synchronized handoff/state records
+- `2026-04-17T11:45:00Z` `2026-04-16-seed-project-documentation` `completed`: Implemented content-freshness runtime changes and related docs updates
+- `2026-04-18T00:00:02Z` `2026-04-18-add-mailchimp-contact-signup` `task_created`: Created approved task artifacts for Mailchimp signup on contact page.
+- `2026-04-18T00:05:00Z` `2026-04-18-add-mailchimp-contact-signup` `completed`: Implemented Mailchimp signup form on contact page with server-side endpoint and placeholder env vars.
+- `2026-04-18T00:10:02Z` `2026-04-18-align-mailchimp-form-design` `task_created`: Created cleanup task to align Mailchimp signup form with existing site design.
+- `2026-04-18T00:14:00Z` `2026-04-18-align-mailchimp-form-design` `completed`: Aligned Mailchimp signup form with existing contact form styling and removed duplicated newsletter form CSS.
+- `2026-04-18T00:15:02Z` `2026-04-18-align-mailchimp-form-design` `decision`: Updated cleanup task to require the title 'Prijava na e-novice' above the newsletter form.
+- `2026-04-18T00:17:00Z` `2026-04-18-align-mailchimp-form-design` `completed`: Added the visible title 'Prijava na e-novice' above the newsletter form using existing card heading styles.
+- `2026-04-18T00:20:00Z` `2026-04-18-align-mailchimp-form-design` `decision`: Increased spacing above newsletter title with a scoped class; no behavioral changes.
+- `2026-04-18T00:20:30Z` `2026-04-18-align-mailchimp-form-design` `completed`: Added spacing above newsletter title for clearer separation from preceding contact email block.
+- `2026-04-18T00:21:02Z` `2026-04-18-align-mailchimp-form-design` `decision`: Updated cleanup task to split contact info and newsletter signup into separate cards.
+- `2026-04-18T00:24:00Z` `2026-04-18-align-mailchimp-form-design` `completed`: Split contact info and newsletter signup into separate cards and removed no-longer-needed spacing hacks.
+- `2026-04-18T00:30:00Z` `2026-04-18-align-mailchimp-form-design` `decision`: Adjusted newsletter GDPR consent row: forced row layout for checkbox-first alignment and explicit regular-case text transform.
+- `2026-04-18T01:00:00Z` `2026-04-18-replace-hcaptcha-with-altcha` `task_created`: Created approved task artifacts to replace the contact form hCaptcha implementation with frictionless ALTCHA.
+- `2026-04-18T01:35:00Z` `2026-04-18-replace-hcaptcha-with-altcha` `completed`: Replaced contact-form hCaptcha flow with ALTCHA (widget + `/api/contact` server-side verification).
+- `2026-04-18T01:45:00Z` `2026-04-18-replace-hcaptcha-with-altcha` `decision`: Updated the task to keep the old hCaptcha flow as clearly labeled commented fallback code while ALTCHA remains active.
+- `2026-04-18T02:20:00Z` `2026-04-18-commit-remaining-app-changes` `task_created`: Created approved task artifacts to commit the remaining application-facing changes in focused commits.
+- `2026-04-18T02:00:00Z` `2026-04-18-replace-hcaptcha-with-altcha` `completed`: Restored prior hCaptcha implementation as clearly labeled commented fallback blocks in contact client/server code while keeping ALTCHA active.
+- `2026-04-18T10:55:00Z` `2026-04-18-prerender-site-for-indexing` `task_created`: Created approved task artifacts to implement clean build-time prerendering for public routes and route-specific SEO metadata.
+- `2026-04-18T11:05:00Z` `2026-04-18-prerender-site-for-indexing` `completed`: Implemented Vite/Preact prerendering for public routes, prerender-time SEO metadata, hydration support, and sitemap expansion.
+- `2026-04-18T11:25:00Z` `2026-04-18-prerender-site-for-indexing` `completed`: Verified the prerender implementation through Docker Compose and confirmed no Docker-specific code fixes were required.
+- `2026-04-19T00:00:02Z` `2026-04-19-unify-contact-form-newsletter-opt-in` `decision`: Human approved execution for unified /contact form with optional newsletter opt-in.
+- `2026-04-19T00:00:02Z` `2026-04-19-add-contact-form-to-index` `decision`: Human approved follow-up index-page form addition after /contact task completes.
+- `2026-04-19T00:10:00Z` `2026-04-19-unify-contact-form-newsletter-opt-in` `completed`: Updated the /contact PIŠITE NAM form with optional newsletter opt-in, conditional message requirement, and partial-success feedback.
+- `2026-04-19T00:10:10Z` `2026-04-19-add-contact-form-to-index` `decision`: Starting dependent index-page contact form addition after /contact task completion.
+- `2026-04-19T00:20:10Z` `2026-04-19-add-contact-form-to-index` `completed`: Centered homepage unified contact form and constrained it to Akustični kvartet block width (~720px) using .
+- `2026-04-19T00:20:20Z` `2026-04-19-add-contact-form-to-index` `completed`: Adjusted homepage unified contact form wrapper to max-width 720px and centered it via .home-contact-form-wrapper class.
+- `2026-04-19T00:00:02Z` `2026-04-19-ignore-runtime-artifacts` `decision`: Human approved adding .aiw3-runtime/ to .gitignore for convenience.
+- `2026-04-19T00:30:00Z` `2026-04-19-unify-contact-form-newsletter-opt-in` `decision`: Approved follow-up refinement for unified contact form: add nearby GDPR wording and improve checkbox styling.

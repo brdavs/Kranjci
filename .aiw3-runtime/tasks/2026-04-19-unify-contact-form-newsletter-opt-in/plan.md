@@ -1,0 +1,39 @@
+# Plan
+
+- mode: execute_after_approval
+- scope: Update only the `/contact` page `PIŠITE NAM` form so users can optionally subscribe to the newsletter during contact submission, while keeping the existing standalone `/contact` newsletter form unchanged.
+- constraints:
+  - planner writes only runtime artifacts
+  - no coding or dispatch yet
+  - no OS or package-manager changes
+  - no new npm dependencies
+  - keep changes localized to the `/contact` contact flow and any minimally required shared API logic
+  - preserve the standalone `/contact` newsletter form behavior and placement
+  - `name` and `email` are always required before submit can enable
+  - if newsletter opt-in is selected, `message` may be empty
+  - if newsletter opt-in is not selected, `message` is required before submit can enable
+  - newsletter opt-in remains explicit and optional
+  - support partial success when contact send succeeds but newsletter signup fails
+  - keep GDPR/privacy language explicit; no hidden enrollment
+  - add a concise GDPR/privacy clause near the newsletter opt-in itself, not only in the follow-up consent copy
+  - refine checkbox styling to better fit the existing visual design without changing form behavior
+- acceptance_criteria:
+  - only the `/contact` `PIŠITE NAM` form changes
+  - standalone `/contact` newsletter form remains unchanged
+  - submit is disabled until `name` and `email` are filled
+  - with newsletter opt-in selected, empty `message` is allowed
+  - without newsletter opt-in selected, `message` is required before submit enables
+  - contact-only submission still works
+  - contact + newsletter-opt-in submission works
+  - full success, partial success, and failure are distinguishable in user feedback
+  - newsletter opt-in includes nearby GDPR/privacy wording before the secondary consent step
+  - checkbox presentation is visually aligned with the existing form design language
+  - no regression to existing contact delivery or standalone newsletter behavior
+- executor_role: developer-fast
+- qa_required: no
+- commit_required: no
+- do_not_change:
+  - standalone `/contact` newsletter form
+  - unrelated routes, components, or page redesign
+  - dependencies, lockfiles, and infra
+  - GDPR/privacy semantics beyond the minimum wording needed for explicit opt-in

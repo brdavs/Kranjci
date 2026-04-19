@@ -1,0 +1,24 @@
+# Decisions
+
+- `2026-04-17T10:00:00Z` `2026-04-16-seed-project-documentation`: Keep docs-only scope; no source changes
+- `2026-04-17T10:40:00Z` `2026-04-16-seed-project-documentation`: Do not alter source files; keep docs in sync with runtime code truth
+- `2026-04-17T11:45:00Z` `2026-04-16-seed-project-documentation`: Fresh content is served via API + blob first, with static JSON fallback.
+- `2026-04-18T00:00:02Z` `2026-04-18-add-mailchimp-contact-signup`: Use developer-fast for this small localized frontend+API integration.
+- `2026-04-18T00:05:00Z` `2026-04-18-add-mailchimp-contact-signup`: No QA requested; implementation verified with build and tsc.
+- `2026-04-18T00:10:02Z` `2026-04-18-align-mailchimp-form-design`: Use developer-fast for a narrow markup/CSS cleanup with no regressions.
+- `2026-04-18T00:14:00Z` `2026-04-18-align-mailchimp-form-design`: Cleanup-only pass completed without changing Mailchimp endpoint contract.
+- `2026-04-18T00:15:02Z` `2026-04-18-align-mailchimp-form-design`: Maintain existing cleanup scope; add one visible section title only.
+- `2026-04-18T00:17:00Z` `2026-04-18-align-mailchimp-form-design`: No new CSS added; existing contact card heading styles reused.
+- `2026-04-18T00:20:00Z` `2026-04-18-align-mailchimp-form-design`: Small design-only spacing refinement requested by user.
+- `2026-04-18T00:20:30Z` `2026-04-18-align-mailchimp-form-design`: No behavior changes; design-only CSS + class update.
+- `2026-04-18T00:21:02Z` `2026-04-18-align-mailchimp-form-design`: Still a narrow contact-page layout refinement; developer-fast remains appropriate.
+- `2026-04-18T00:24:00Z` `2026-04-18-align-mailchimp-form-design`: Newsletter behavior preserved; only card structure and minimal CSS were adjusted.
+- `2026-04-18T01:00:00Z` `2026-04-18-replace-hcaptcha-with-altcha`: Use developer-standard for the frontend + server verification swap and env contract update.
+- `2026-04-18T01:35:00Z` `2026-04-18-replace-hcaptcha-with-altcha`: hCaptcha references were removed from contact flow and task artifacts/docs aligned.
+- `2026-04-18T01:45:00Z` `2026-04-18-replace-hcaptcha-with-altcha`: Reuse the same task lineage and owner; keep scope narrow to restoring commented fallback blocks only.
+- `2026-04-18T02:20:00Z` `2026-04-18-commit-remaining-app-changes`: Use developer-fast for bounded git grouping/commit work with explicit file boundaries.
+- `2026-04-18T02:00:00Z` `2026-04-18-replace-hcaptcha-with-altcha`: Only localized commented code was added; no second active captcha path introduced.
+- `2026-04-18T10:55:00Z` `2026-04-18-prerender-site-for-indexing`: Use developer-strong because this is cross-cutting build/routing/prerender work touching entrypoints, metadata, and static generation.
+- `2026-04-18T11:05:00Z` `2026-04-18-prerender-site-for-indexing`: Follow-up hardening may be warranted for Node-side Markdown sanitization during prerender.
+- `2026-04-18T11:15:00Z` `2026-04-18-prerender-site-for-indexing`: Keep the code unless Docker verification requires targeted fixes; correct runtime state first.
+- `2026-04-18T11:25:00Z` `2026-04-18-prerender-site-for-indexing`: Host-side verification was superseded by Docker-first verification per repo workflow.

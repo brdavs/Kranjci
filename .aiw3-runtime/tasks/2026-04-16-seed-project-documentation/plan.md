@@ -1,0 +1,24 @@
+# Plan
+
+- mode: execute_after_approval
+- scope: Rebuild and update runtime documentation for this project to the current planner runtime-doc standard, using current code and existing operational files as sources of truth.
+- constraints:
+  - planner writes only runtime artifacts
+  - do not modify application code in this task
+  - do not rely on removed repo-level AGENTS/OpenSpec guidance as the active standard
+  - ground docs in current code and actual workflow
+  - keep findings about optimizations or mismatches as documentation content, not implementation work
+- acceptance_criteria:
+  - `.aiw3-runtime/docs/` contains a coherent runtime-doc set aligned to the planner standard
+  - docs cover architecture, onboarding, workflow, current state, decisions, open items, and handoff/history as useful
+  - docs are grounded in current repo state and explicitly note meaningful discrepancies or uncertainty
+  - stale OpenSpec-oriented assumptions are removed or called out as legacy if still relevant historically
+- executor_role: developer-standard
+- qa_required: no
+- commit_required: no
+- do_not_change:
+  - app behavior
+  - repository source files
+  - content data files
+  - deployment configuration
+  - environment variable values

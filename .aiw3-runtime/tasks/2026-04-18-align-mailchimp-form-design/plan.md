@@ -1,0 +1,32 @@
+# Plan
+
+- mode: execute_after_approval
+- scope: Refactor the contact-page contact info and Mailchimp signup layout so the phone/email block and newsletter signup each live in their own contact card, while preserving the site's form design language and minimizing CSS changes.
+- constraints:
+  - planner writes only runtime artifacts
+  - no OS changes
+  - no new JS libraries
+  - no package or lockfile changes
+  - preserve Mailchimp functionality and env var contract
+  - preserve existing `/api/contact` behavior
+  - keep the change localized to the contact page and minimal CSS needed for consent-row alignment
+- acceptance_criteria:
+  - `Mobilni telefon in e-pošta` remains in its own `ContactCard`
+  - `Prijava na e-novice` is rendered in a separate `ContactCard`
+  - newsletter signup includes the title `Prijava na e-novice`
+  - newsletter signup visually aligns with the existing `contact-form` styling
+  - duplicated newsletter-specific input styling is removed where reuse is possible
+  - spacing hacks are removed
+  - GDPR consent remains clear, required, and usable
+  - success/error feedback still works
+  - `npm run build` passes
+  - `npx tsc --noEmit` passes
+- executor_role: developer-fast
+- qa_required: no
+- commit_required: no
+- do_not_change:
+  - `package.json` and lockfile
+  - OS or system packages
+  - Mailchimp server endpoint contract unless minimally required by markup cleanup
+  - existing `/api/contact` behavior
+  - unrelated routes, components, or site-wide styling

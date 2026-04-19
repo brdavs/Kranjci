@@ -1032,10 +1032,57 @@ footer .footer-logo { height: 38px; }
     letter-spacing: normal;
     color: var(--muted);
 }
+.contact-consent--unified {
+    gap: 12px;
+    align-items: center;
+    cursor: pointer;
+}
 .contact-consent input {
-    width: auto;
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: #0f0f10;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    position: relative;
+    flex-shrink: 0;
     margin: 0;
-    accent-color: var(--brand);
+    transition: border-color 140ms ease, background-color 140ms ease, box-shadow 140ms ease;
+}
+.contact-consent input:focus-visible {
+    outline: 2px solid rgba(255, 102, 0, 0.45);
+    outline-offset: 2px;
+}
+.contact-consent input::after {
+    content: "✓";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1;
+    opacity: 0;
+    transition: opacity 120ms ease;
+}
+.contact-consent input:checked {
+    background: #ff6600;
+    border-color: #ff6600;
+    box-shadow: none;
+}
+.contact-consent input:checked::after {
+    opacity: 1;
+}
+.contact-gdpr-note {
+    display: block;
+    margin: -4px 0 0 30px;
+    color: rgba(163, 163, 172, 0.84);
+    font-size: 12px;
+    line-height: 1.35;
 }
 .contact-consent span {
     text-transform: none;

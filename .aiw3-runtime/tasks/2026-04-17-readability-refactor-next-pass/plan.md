@@ -1,0 +1,25 @@
+# Plan
+
+- mode: execute_after_approval
+- scope: Perform a readability-only refactor of the most oversized UI files, especially `src/app.tsx` and `src/routes/Contact.tsx`, while keeping behavior unchanged.
+- constraints:
+  - planner writes only runtime artifacts
+  - no behavior changes
+  - no visual redesign
+  - no API contract changes
+  - keep the delta focused and maintainable
+  - verify type/build/run after refactor
+- acceptance_criteria:
+  - targeted files are split into smaller, clearer components/modules
+  - route behavior, styling behavior, and form submission behavior remain unchanged
+  - typecheck/build/dev run pass after refactor
+  - key routes are verified in the browser
+- executor_role: developer-standard
+- qa_required: no
+- commit_required: no
+- do_not_change:
+  - route behavior
+  - copy/content meaning
+  - styling behavior
+  - form submission behavior
+  - deployment behavior

@@ -1,0 +1,31 @@
+# Plan
+
+- mode: execute_after_approval
+- scope: Replace the contact page's current hCaptcha client/server verification path with a frictionless ALTCHA integration, including any small env/config updates required for the contact endpoint to keep working.
+- constraints:
+  - planner writes only runtime artifacts
+  - keep the change focused on the existing contact captcha flow
+  - preserve current contact form fields, honeypot behavior, SMTP delivery, and success/error UX
+  - do not broaden into newsletter, unrelated contact-page redesign, or mailer changes
+  - use current project stack and coding style
+  - keep env handling maintainable and avoid exposing secrets client-side
+  - keep the old hCaptcha implementation commented out and easy to restore rather than removing it entirely
+- acceptance_criteria:
+  - contact page no longer depends on hCaptcha client code or script loading
+  - contact form renders and submits with ALTCHA instead of hCaptcha
+  - `/api/contact` validates the ALTCHA payload server-side before sending mail when ALTCHA is configured
+  - existing honeypot short-circuit remains intact
+  - existing success/error states continue to work for users
+  - old hCaptcha client/server code remains present as clearly labeled commented fallback blocks in an easy-to-restore location
+  - active hCaptcha runtime path is disabled while ALTCHA remains the active implementation
+  - documentation/example env expectations are updated if the contract changed
+  - build/typecheck verification is performed and reported
+- executor_role: developer-standard
+- qa_required: no
+- commit_required: no
+- do_not_change:
+  - newsletter signup flow
+  - SMTP configuration behavior beyond captcha-related wiring
+  - unrelated routes, content, or global styling
+  - deployment model except for minimal env/config naming updates required by ALTCHA
+  - broader refactors beyond preserving a localized commented hCaptcha fallback

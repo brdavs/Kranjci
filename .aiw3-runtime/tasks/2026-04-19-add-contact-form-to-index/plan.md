@@ -1,0 +1,32 @@
+# Plan
+
+- mode: execute_after_approval
+- scope: Add the new unified contact form to the index page below the `KONTAKT IN POVPRAŠEVANJE` block, reusing the same validation and submit behavior planned for the updated `/contact` contact form, while leaving the standalone `/contact` newsletter form unchanged.
+- constraints:
+  - planner writes only runtime artifacts
+  - no coding or dispatch yet
+  - no OS or package-manager changes
+  - no new npm dependencies
+  - no unrelated homepage redesign
+  - preserve existing site visual language
+  - preserve the standalone `/contact` newsletter form behavior and placement
+  - preserve the unified form rules: `name` and `email` always required; `message` required only when newsletter opt-in is not selected
+  - newsletter opt-in remains explicit and optional
+  - support partial success when contact send succeeds but newsletter signup fails
+- acceptance_criteria:
+  - the unified contact form appears on the index page below `KONTAKT IN POVPRAŠEVANJE`
+  - index-page form follows the same field, validation, and submit rules as the updated `/contact` contact form
+  - submit is disabled until `name` and `email` are filled
+  - with newsletter opt-in selected, empty message is allowed
+  - without newsletter opt-in selected, message is required before submit enables
+  - success, partial-success, and failure feedback are clear
+  - existing standalone `/contact` newsletter form remains unchanged
+  - homepage layout remains stable without unrelated visual regressions
+- executor_role: developer-standard
+- qa_required: no
+- commit_required: no
+- do_not_change:
+  - standalone `/contact` newsletter form
+  - unrelated homepage sections and styling
+  - dependencies, lockfiles, or infra
+  - contact/newsletter behavior outside the scoped unified form reuse

@@ -1,0 +1,23 @@
+# Plan
+
+- mode: execute_after_approval
+- scope: Inspect the remaining uncommitted app-facing files, create one or more meaningful commits for them, and exclude runtime/process artifacts and unrelated files.
+- constraints:
+  - planner writes only runtime artifacts
+  - commit only files intentionally grouped into focused changes
+  - do not commit `.env` or `.aiw3-runtime/**`
+  - do not push
+  - keep commit messages concise and why-focused
+- acceptance_criteria:
+  - all requested remaining app/code/config files are committed in meaningful groups
+  - `src/routes/Home_VIDEO.tsx` is included in an appropriate commit
+  - runtime artifacts, docs/process artifacts, and unrelated files remain uncommitted
+  - final `git status --short` shows only the intentionally uncommitted leftovers
+- executor_role: developer-fast
+- qa_required: no
+- commit_required: yes
+- do_not_change:
+  - `.env`
+  - `.aiw3-runtime/**`
+  - docs/process artifacts unless explicitly part of a chosen commit group
+  - previously created commits

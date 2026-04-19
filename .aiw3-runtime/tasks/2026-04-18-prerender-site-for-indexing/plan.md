@@ -1,0 +1,29 @@
+# Plan
+
+- mode: execute_after_approval
+- scope: Add build-time prerendering for the public Preact SPA so static and known dynamic routes ship with meaningful HTML and server-rendered SEO metadata suitable for search indexing.
+- constraints:
+  - planner writes only runtime artifacts
+  - keep the deployment shape as Vercel static output plus existing serverless APIs
+  - prefer a maintainable Preact SSR/prerender path over DOM snapshotting
+  - preserve existing routing, visible behavior, and hydration after load
+  - keep the change focused on public-page indexability, route metadata, and route generation
+  - do not broaden into content redesign, newsletter/contact behavior changes, or unrelated refactors
+  - use the repo's current stack and conventions
+- acceptance_criteria:
+  - build emits prerendered HTML for `/`, `/shows`, `/music`, `/history`, `/clients`, `/members`, `/contact`
+  - build emits prerendered HTML for all known `/member/:slug` and `/news/:slug` routes from current content/data sources
+  - prerendered HTML contains meaningful route content, internal links, and route-specific `<title>`, description, and canonical tags
+  - client hydration/navigation still works after prerendering
+  - sitemap generation includes all public routes, including `/history` and `/clients`
+  - implementation is verified through the repo's Docker Compose workflow, not host-native commands, and a brief report of resulting output shape is provided
+- executor_role: developer-strong
+- qa_required: no
+- commit_required: no
+- do_not_change:
+  - contact/newsletter server behavior except where untouched by prerender support
+  - content source formats unless a minimal read-only adapter is needed
+  - deployment platform or hosting model
+  - unrelated styling or page copy
+  - broad app rewrites beyond what prerender support requires
+  - host-system configuration or package state

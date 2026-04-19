@@ -189,13 +189,8 @@ export function UnifiedContactForm() {
             </label>
             <label>Sporočilo
                 <textarea value={message} onInput={onMessageInput} required={isContactMessageRequired} rows={6}></textarea>
-                {!isContactMessageRequired ? (
-                    <small class="contact-status">
-                        Sporočilo lahko ostane prazno, če se želite hkrati prijaviti na e-novice.
-                    </small>
-                ) : null}
             </label>
-            <label class="contact-consent">
+            <label class="contact-consent contact-consent--unified">
                 <input
                     type="checkbox"
                     checked={contactNewsletterOptIn}
@@ -203,8 +198,11 @@ export function UnifiedContactForm() {
                 />
                 <span>Želim se prijaviti na e-novice Zasedbe Kranjci.</span>
             </label>
+            <small class="contact-gdpr-note">
+                Prijava na e-novice je mogoča samo ob predhodni privolitvi za obdelavo osebnih podatkov.
+            </small>
             {contactNewsletterOptIn && (
-                <label class="contact-consent">
+                <label class="contact-consent contact-consent--unified">
                     <input
                         type="checkbox"
                         checked={contactNewsletterConsent}

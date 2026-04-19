@@ -1,0 +1,23 @@
+# Plan
+
+- mode: execute_after_approval
+- scope: Improve the codebase in focused high-impact areas for readability, maintainability, type safety, and runtime robustness, then verify the application actually runs.
+- constraints:
+  - planner writes only runtime artifacts
+  - keep changes maintainable and human-readable
+  - prefer minimal deltas in high-value areas over broad cleanup
+  - do not break existing app behavior while improving structure and safety
+  - real verification is required; build/run/browser checks may be used
+- acceptance_criteria:
+  - selected code improvements are implemented in a focused, maintainable shape
+  - the app passes appropriate verification for the changed areas
+  - the project is run or otherwise behaviorally verified so we have evidence it still works
+  - any remaining risks or follow-up opportunities are clearly reported
+- executor_role: developer-strong
+- qa_required: no
+- commit_required: no
+- do_not_change:
+  - product scope
+  - visual design except where required by the fix
+  - environment secret values
+  - unrelated routes, content, or deployment behavior

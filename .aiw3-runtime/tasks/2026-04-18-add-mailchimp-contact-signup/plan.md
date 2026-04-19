@@ -1,0 +1,24 @@
+# Plan
+
+- mode: execute_after_approval
+- scope: Add a small Mailchimp signup section to the existing `/contact` page card and wire it to a new or existing server-side endpoint that reads placeholder Mailchimp env vars for secure subscription handling.
+- constraints:
+  - planner writes only runtime artifacts
+  - keep the change localized and maintainable
+  - do not expose Mailchimp API secrets to the browser
+  - use placeholder env vars and placeholder IDs only
+  - follow existing project conventions and UI patterns
+- acceptance_criteria:
+  - `/contact` shows a mailing list signup section below the existing general contact email in the same card
+  - signup collects name and email
+  - signup requires GDPR consent before submission
+  - subscription call is handled server-side with placeholder Mailchimp env vars
+  - user sees success and failure feedback in the UI
+  - existing contact form and current contact email remain functional and visually intact
+- executor_role: developer-fast
+- qa_required: no
+- commit_required: no
+- do_not_change:
+  - existing `/api/contact` behavior unless a minimal shared helper is clearly warranted
+  - unrelated contact page layout or copy
+  - unrelated routes, data flows, or deployment config
