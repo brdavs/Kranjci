@@ -775,6 +775,12 @@ a:hover {
     padding: 100px 0 140px;
 }
 
+.home-contact-form-wrapper {
+    width: min(720px, 100%);
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .cta-inner {
     background:
         linear-gradient(140deg, rgba(255, 102, 0, 0.1), transparent 42%),

@@ -5,6 +5,8 @@ import { reviews } from "../data/reviews";
 import { getAllPosts } from "../news/loader";
 import { useMetaTags } from "../hooks/useMetaTags";
 import { formatDisplayDate } from "../utils/date";
+import { ContactCard } from "./contact/ContactCard";
+import { UnifiedContactForm } from "./contact/UnifiedContactForm";
 
 const HERO_SLIDES = [
     "/media/home/00.avif",
@@ -322,6 +324,15 @@ export default function Home() {
                         <a class="btn" href="/contact">Stopite v stik</a>
                         <Link class="btn btn-secondary" href="/members">Spoznajte zasedbo</Link>
                     </div>
+                </div>
+            </section>
+
+            <section class="home-section">
+                <div class="container home-contact-form-wrapper">
+                    <ContactCard title="Pišite nam">
+                        <p>Izpolnite obrazec in vrnili se bomo z odgovorom v najkrajšem času.</p>
+                        <UnifiedContactForm />
+                    </ContactCard>
                 </div>
             </section>
         </div>
