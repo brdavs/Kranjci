@@ -1016,7 +1016,7 @@ footer .footer-logo { height: 38px; }
     width: 100%;
     min-width: 0;
 }
-.contact-card h3 { margin-top: 0; margin-bottom: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-size: 14px; color: var(--muted); }
+.contact-card h3 { margin-top: 0; margin-bottom: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-size: 14px; color: var(--muted); text-align: left; }
 .contact-card p { margin: 0 0 12px 0; line-height: 1.6; }
 .contact-form { display: flex; flex-direction: column; gap: 12px; }
 .contact-form label { display: flex; flex-direction: column; gap: 6px; font-size: 14px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
