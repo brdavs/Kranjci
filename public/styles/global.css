@@ -1065,9 +1065,10 @@ footer .footer-logo { height: 38px; }
 }
 .contact-consent--unified {
     gap: 12px;
-    align-items: center;
+    align-items: flex-start;
     cursor: pointer;
     text-align: left;
+    width: 100%;
 }
 .contact-consent input {
     appearance: none;
@@ -1111,10 +1112,11 @@ footer .footer-logo { height: 38px; }
 }
 .contact-gdpr-note {
     display: block;
-    margin: -4px 0 0 30px;
+    margin: -2px 0 0 0;
     color: rgba(163, 163, 172, 0.84);
     font-size: 12px;
     line-height: 1.35;
+    text-align: left;
 }
 .contact-consent span {
     text-transform: none;
