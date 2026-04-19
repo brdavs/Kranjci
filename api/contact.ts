@@ -10,6 +10,8 @@ type ContactPayload = {
     message: string;
     website?: string;
     altchaPayload?: string;
+    newsletterOptIn?: boolean;
+    newsletterConsent?: boolean;
     // hCaptchaToken?: string;
 };
 
@@ -26,6 +28,10 @@ function apiError(status: number, message: string): ApiError {
 
 function asNonEmptyString(value: unknown): string {
     return typeof value === "string" ? value.trim() : "";
+}
+
+function asBoolean(value: unknown): boolean {
+    return value === true;
 }
 
 function parseBody(body: unknown): Record<string, unknown> {
@@ -48,12 +54,15 @@ function validatePayload(body: unknown): ContactPayload {
     const message = asNonEmptyString(parsed.message);
     const website = asNonEmptyString(parsed.website);
     const altchaPayload = asNonEmptyString(parsed.altchaPayload);
+    const newsletterOptIn = asBoolean(parsed.newsletterOptIn);
+    const newsletterConsent = asBoolean(parsed.newsletterConsent);
     // const hCaptchaToken = asNonEmptyString(parsed.hCaptchaToken);
 
     if (!name) throw apiError(400, "Missing name");
     if (!email) throw apiError(400, "Missing email");
     if (!EMAIL_RE.test(email)) throw apiError(400, "Invalid email");
-    if (!message) throw apiError(400, "Missing message");
+    if (!newsletterOptIn && !message) throw apiError(400, "Missing message");
+    if (newsletterOptIn && !newsletterConsent) throw apiError(400, "GDPR consent is required");
 
     return {
         name,
@@ -61,6 +70,8 @@ function validatePayload(body: unknown): ContactPayload {
         message,
         website,
         altchaPayload,
+        newsletterOptIn,
+        newsletterConsent,
         // hCaptchaToken
     };
 }
