@@ -200,6 +200,8 @@ export function UnifiedContactForm() {
             </label>
             <small class="contact-gdpr-note">
                 Prijava na e-novice je mogoča samo ob predhodni privolitvi za obdelavo osebnih podatkov.
+                Podatke iz tega obrazca uporabljamo za obravnavo vašega sporočila in, ob privolitvi, za pošiljanje e-novic.
+                Za več informacij o obdelavi podatkov preberite <a href="/privacy">Politiko zasebnosti</a>.
             </small>
             {contactNewsletterOptIn && (
                 <label class="contact-consent contact-consent--unified">

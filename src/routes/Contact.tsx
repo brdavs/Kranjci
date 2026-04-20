@@ -104,13 +104,18 @@ export default function Contact() {
                                 E-pošta
                                 <input type="email" value={newsletterEmail} onInput={onNewsletterEmailInput} required />
                             </label>
-                            <label class="contact-consent">
+                            <label class="contact-consent contact-consent--unified">
                                 <input type="checkbox" checked={newsletterConsent} onInput={onNewsletterConsentInput} required />
                                 <span>
                                     Strinjam se z obdelavo osebnih podatkov za namen prejemanja e-novic Zasedbe Kranjci.
                                     Svoje privolitev lahko kadarkoli prekličete.
                                 </span>
                             </label>
+                            <small class="contact-gdpr-note">
+                                Prijava na e-novice je mogoča samo ob predhodni privolitvi za obdelavo osebnih podatkov.
+                                Podatke iz tega obrazca uporabljamo za pošiljanje e-novic.
+                                Za več informacij o obdelavi podatkov preberite <a href="/privacy">Politiko zasebnosti</a>.
+                            </small>
 
                             <div class="contact-actions">
                                 <button class="btn" disabled={newsletterStatus === "sending" || !isNewsletterFormReady} type="submit">

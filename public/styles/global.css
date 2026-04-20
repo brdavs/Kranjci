@@ -1118,6 +1118,9 @@ footer .footer-logo { height: 38px; }
     line-height: 1.35;
     text-align: left;
 }
+.contact-gdpr-note a {
+    color: #ff6600;
+}
 .contact-consent span {
     text-transform: none;
     font-size: 13px;
@@ -1129,6 +1132,31 @@ footer .footer-logo { height: 38px; }
 .contact-status { font-size: 14px; }
 .contact-status--ok { color: #7dd97c; }
 .contact-status--err { color: #ff6b6b; }
+.privacy-page {
+    max-width: 860px;
+}
+.privacy-page h1 {
+    margin-bottom: 16px;
+}
+.privacy-page section {
+    margin-top: 28px;
+}
+.privacy-page h2 {
+    margin: 0 0 10px;
+    font-size: clamp(16px, 2vw, 20px);
+}
+.privacy-page p,
+.privacy-page li {
+    color: color-mix(in oklab, var(--fg) 90%, rgba(255, 255, 255, 0.6));
+    line-height: 1.7;
+}
+.privacy-page ul {
+    margin: 0;
+    padding-left: 22px;
+}
+.privacy-page a {
+    color: var(--brand);
+}
 .contact-list { display: grid; gap: 8px; margin: 0 0 16px 0; }
 .contact-list div { display: grid; grid-template-columns: 1fr auto; gap: 6px; align-items: center; }
 .contact-list dt { font-weight: 600; }

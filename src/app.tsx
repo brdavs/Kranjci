@@ -9,6 +9,7 @@ import Members from "./routes/Members";
 import Member from "./routes/Member";
 import History from "./routes/History";
 import Clients from "./routes/Clients";
+import Privacy from "./routes/Privacy";
 import NotFound from "./routes/NotFound";
 import { SiteFooter } from "./components/SiteFooter";
 import { SiteHeader } from "./components/SiteHeader";
@@ -38,6 +39,7 @@ export function App() {
                     <Route path="/history" component={History} />
                     <Route path="/clients" component={Clients} />
                     <Route path="/members" component={Members} />
+                    <Route path="/privacy" component={Privacy} />
                     <Route path="/member/:slug" component={Member} />
                     <Route component={NotFound} />
                 </Switch>

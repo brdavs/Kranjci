@@ -98,6 +98,12 @@ function staticMetaForPath(pathname: string): MetaOptions | undefined {
                 description: "Stopite v stik z Zasedbo Kranjci za poroke, poslovne dogodke ali posebne priložnosti.",
                 path
             };
+        case "/privacy":
+            return {
+                title: "Politika zasebnosti",
+                description: "Kako Zasedba Kranjci obdeluje osebne podatke pri kontaktnem obrazcu in prijavi na e-novice.",
+                path
+            };
         default:
             return undefined;
     }
@@ -171,7 +177,8 @@ export function getPrerenderRoutes(): string[] {
         "/history",
         "/clients",
         "/members",
-        "/contact"
+        "/contact",
+        "/privacy"
     ];
 
     const memberRoutes = getAllMembers().map((member) => `/member/${encodeURIComponent(member.slug)}`);

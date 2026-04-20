@@ -7,7 +7,9 @@ export function SiteFooter() {
             <Link href="/" aria-label={SITE_BRAND.name} class="footer-brand">
                 <img src={SITE_BRAND.imagePath} alt={SITE_BRAND.name} class="brand-logo footer-logo" />
             </Link>
-            <div>© {new Date().getFullYear()} {SITE_BRAND.name} · <a href={SITE_BRAND.contactPath}>Kontakt</a></div>
+            <div>
+                © {new Date().getFullYear()} {SITE_BRAND.name} · <a href={SITE_BRAND.contactPath}>Kontakt</a> · <Link href="/privacy">Zasebnost</Link>
+            </div>
         </footer>
     );
 }
