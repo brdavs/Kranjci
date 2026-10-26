@@ -28,7 +28,15 @@ async function close(server) {
 test("traced function with real Blob SDK serves shows over HTTP outside the repository", async t => {
     const dir = await mkdtemp(path.join(tmpdir(), "packaged-content-api-"));
     const originalCwd = process.cwd();
-    const envNames = ["BLOB_READ_WRITE_TOKEN", "VERCEL_BLOB_API_URL", "VERCEL_BLOB_RETRIES"];
+    const envNames = ["BLOB_READ_WRITE_TOKEN", "VERCEL_BLOB_API_URL", "VERCEL_BLOB_RETRIES", "VERCEL_GIT_COMMIT_SHA"];
+    const originalInfo = console.info;
+    const logs = [];
+    let requestLogs = [];
+    console.info = value => { logs.push(JSON.parse(value)); };
+    function expectLog(event, details = {}) {
+        assert.ok(requestLogs.some(log => log.event === event && Object.entries(details).every(([key, value]) => log[key] === value)),
+            `expected ${event} ${JSON.stringify(details)} in ${JSON.stringify(requestLogs)}`);
+    }
     const previousEnv = Object.fromEntries(envNames.map(name => [name, process.env[name]]));
     let apiServer;
     let storageServer;
@@ -74,19 +82,20 @@ test("traced function with real Blob SDK serves shows over HTTP outside the repo
                 listCalls++;
                 if (mode === "denied") {
                     res.writeHead(403);
-                    res.end(JSON.stringify({ error: { code: "forbidden" } }));
+                    res.end(JSON.stringify({ error: { code: "forbidden", message: "private-error-sentinel" } }));
                     return;
                 }
                 const blobs = [
                     { pathname: "shows-old.json", url: `${storageOrigin}/shows-old.json`, uploadedAt: "2026-10-25T00:00:00Z", size: 2 },
                     { pathname: "shows-current.json", url: `${storageOrigin}/shows-current.json`, uploadedAt: "2026-10-26T00:00:00Z", size: 300 }
                 ];
-                res.end(JSON.stringify({ blobs: blobs.filter(blob => blob.pathname.startsWith(url.searchParams.get("prefix"))), hasMore: false }));
+                res.end(JSON.stringify({ blobs: mode === "empty" ? [] : blobs.filter(blob => blob.pathname.startsWith(url.searchParams.get("prefix"))), hasMore: false }));
                 return;
             }
             downloadCalls++;
             if (url.pathname === "/shows-current.json") {
-                res.end(mode === "invalid-json" ? "not JSON" : JSON.stringify(freshShows));
+                if (mode === "download-failed") res.writeHead(503);
+                res.end(mode === "invalid-json" ? "not JSON private-body-sentinel" : mode === "non-array" ? "{}" : JSON.stringify(freshShows));
             } else {
                 res.end("[]");
             }
@@ -95,6 +104,7 @@ test("traced function with real Blob SDK serves shows over HTTP outside the repo
         process.env.BLOB_READ_WRITE_TOKEN = "vercel_blob_rw_fixture_local_only";
         process.env.VERCEL_BLOB_API_URL = `${storageOrigin}/blob`;
         process.env.VERCEL_BLOB_RETRIES = "0";
+        process.env.VERCEL_GIT_COMMIT_SHA = "abcdef1234567890abcdef1234567890abcdef12";
 
         // Isolate filesystem access just like a serverless package: no repository cwd.
         process.chdir(dir);
@@ -109,32 +119,80 @@ test("traced function with real Blob SDK serves shows over HTTP outside the repo
         });
         const apiOrigin = await listen(apiServer);
         async function getShows() {
+            const offset = logs.length;
             const response = await fetch(`${apiOrigin}/api/shows`);
             assert.equal(response.status, 200);
-            return response.json();
+            const body = await response.json();
+            requestLogs = logs.slice(offset);
+            assert.ok(requestLogs.length > 0);
+            assert.ok(requestLogs.every(log => log.component === "content-reader" && log.filename === "shows.json"));
+            assert.ok(requestLogs.every(log => log.readId === requestLogs[0].readId));
+            expectLog("read_start", { revision: "abcdef123456" });
+            return body;
         }
 
         await t.test("actual SDK lists and downloads latest suffixed Blob via local HTTP", async () => {
             assert.deepEqual(await getShows(), freshShows);
             assert.equal(listCalls, 1, "real SDK sent list request");
             assert.equal(downloadCalls, 1, "handler downloaded selected Blob");
+            expectLog("blob_list", { count: 2, hasMore: false });
+            expectLog("blob_selected", { pathname: "shows-current.json" });
+            expectLog("blob_download", { status: 200 });
+            expectLog("parse", { source: "blob", result: "array", count: 2 });
+            expectLog("read_result", { source: "blob", count: 2 });
         });
         const bundled = JSON.parse(await readFile(path.join(dir, "src/data/shows.json"), "utf8"));
         assert.ok(bundled.length > 0);
         await t.test("missing Blob configuration still serves packaged previous shows", async () => {
             delete process.env.BLOB_READ_WRITE_TOKEN;
             assert.deepEqual(await getShows(), bundled);
+            expectLog("blob_skipped", { reason: "no_token" });
+            expectLog("read_result", { source: "static", count: bundled.length });
         });
         await t.test("real SDK access denial falls back to packaged previous shows", async () => {
             process.env.BLOB_READ_WRITE_TOKEN = "vercel_blob_rw_fixture_local_only";
             mode = "denied";
             assert.deepEqual(await getShows(), bundled);
+            expectLog("blob_error", { stage: "list" });
+            expectLog("read_result", { source: "static", count: bundled.length });
         });
         await t.test("document current empty-array behavior on invalid downloaded JSON", async () => {
             mode = "invalid-json";
             assert.deepEqual(await getShows(), []);
+            expectLog("parse", { source: "blob", result: "invalid_json" });
+            expectLog("read_result", { source: "blob", count: 0 });
         });
+        await t.test("non-array JSON is distinguishable from malformed JSON", async () => {
+            mode = "non-array";
+            assert.deepEqual(await getShows(), []);
+            expectLog("parse", { source: "blob", result: "not_array" });
+        });
+        await t.test("empty listing logs fallback reason and preserves bundled shows", async () => {
+            mode = "empty";
+            assert.deepEqual(await getShows(), bundled);
+            expectLog("blob_list", { count: 0, hasMore: false });
+            expectLog("blob_skipped", { reason: "no_candidate" });
+            expectLog("read_result", { source: "static", count: bundled.length });
+        });
+        await t.test("failed download logs status and preserves bundled shows", async () => {
+            mode = "download-failed";
+            assert.deepEqual(await getShows(), bundled);
+            expectLog("blob_download", { status: 503 });
+            expectLog("read_result", { source: "static", count: bundled.length });
+        });
+        await t.test("missing packaged fallback logs ENOENT instead of hiding the reason", async () => {
+            delete process.env.BLOB_READ_WRITE_TOKEN;
+            await rm(path.join(dir, "src/data/shows.json"));
+            assert.deepEqual(await getShows(), []);
+            expectLog("static_error", { errorCode: "ENOENT" });
+            expectLog("read_result", { source: "static", count: 0 });
+        });
+        const serialized = JSON.stringify(logs);
+        for (const privateValue of ["vercel_blob_rw_fixture_local_only", "private-error-sentinel", "private-body-sentinel", storageOrigin, "Martinovanje"]) {
+            assert.ok(!serialized.includes(privateValue), `diagnostics do not contain ${privateValue}`);
+        }
     } finally {
+        console.info = originalInfo;
         process.chdir(originalCwd);
         for (const name of envNames) {
             if (previousEnv[name] === undefined) delete process.env[name];
