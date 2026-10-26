@@ -12,6 +12,7 @@ type BlobItem = {
 type BlobListResponse = {
     blobs?: unknown;
     hasMore?: boolean;
+    cursor?: string;
 };
 
 type ReadContext = { filename: string; readId: string; revision: string };
@@ -85,9 +86,27 @@ async function readBlobJson<T>(filename: string, context: ReadContext): Promise<
         const { list } = await import("@vercel/blob");
         stage = "list";
         const prefix = path.parse(filename).name;
-        const response = (await list({ token, prefix, limit: 100 })) as BlobListResponse;
-        const blobs = isArrayOfUnknown(response.blobs) ? (response.blobs as BlobItem[]) : [];
-        diagnostic(context, "blob_list", { prefix, count: blobs.length, hasMore: response.hasMore === true });
+        const blobs: BlobItem[] = [];
+        const seenCursors = new Set<string>();
+        let cursor: string | undefined;
+        let page = 0;
+        while (true) {
+            const response = (await list({ token, prefix, limit: 100, cursor })) as BlobListResponse;
+            const pageBlobs = isArrayOfUnknown(response.blobs) ? (response.blobs as BlobItem[]) : [];
+            blobs.push(...pageBlobs);
+            page += 1;
+            diagnostic(context, "blob_list", {
+                prefix, page, count: pageBlobs.length, total: blobs.length, hasMore: response.hasMore === true
+            });
+            if (!response.hasMore) break;
+            if (typeof response.cursor !== "string" || !response.cursor || seenCursors.has(response.cursor)) {
+                // Do not claim a partial listing contains the newest upload or loop on a broken cursor.
+                diagnostic(context, "blob_skipped", { reason: "invalid_pagination_cursor" });
+                return null;
+            }
+            cursor = response.cursor;
+            seenCursors.add(cursor);
+        }
         const candidate = blobs
             .filter((item) => typeof item?.url === "string")
             .sort((a, b) => new Date(normalizeDate(b)).getTime() - new Date(normalizeDate(a)).getTime())[0];
