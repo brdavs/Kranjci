@@ -46,7 +46,7 @@ async function readBlobJson<T>(filename: string): Promise<T[] | null> {
         const { list } = await import("@vercel/blob");
         const response = (await list({
             token,
-            prefix: filename,
+            prefix: path.parse(filename).name,
             limit: 100
         })) as BlobListResponse;
 

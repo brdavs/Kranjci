@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { readContentJson } from "./_content-reader";
+import { readContentJson } from "../lib/content-reader.js";
 
 type RawShow = {
     date: string;
